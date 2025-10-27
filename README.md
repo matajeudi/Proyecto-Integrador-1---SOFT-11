@@ -1,2 +1,6 @@
-# Proyecto-Integrador-1---SOFT-11
-Repository del Proyector Integrador 1 - Proyecto Final
+# Proyecto Integrador 1 - SOFT-11 (Cenfotec)
+
+##  Gestion Humana
+
+> Desarrollador: Jeudi Mata
+> Curso lectivo: `C3 2025`
