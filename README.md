@@ -2,5 +2,5 @@
 
 ##  Gestion Humana
 
-> Desarrollador: Jeudi Mata
-> Curso lectivo: `C3 2025`
+> - Desarrollador: Jeudi Mata
+> - Curso lectivo: `C3 2025`
