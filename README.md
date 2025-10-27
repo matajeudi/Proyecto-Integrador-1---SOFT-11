@@ -63,9 +63,9 @@ Tipos de commit principales:
 |------|-------------|---------|
 | `New` | Nueva funcionalidad | `New(auth): implementar login de usuarios` |
 | `Update` | Actualizacion de codigo (logica) sin completar | `Update(auth): progreso en la funcionalidad de login de usuarios` |
-| `Fix` | Corrección de errores | `fix(reportes): corregir cálculo de horas` |
-| `Docs` | Documentación | `docs(readme): actualizar guía de instalación` |
-| `Style` | Formato (sin cambios de lógica) | `style: aplicar Prettier a todo el código` |
+| `Fix` | Corrección de errores | `Fix(reportes): corregir cálculo de horas` |
+| `Docs` | Documentación | `Docs(readme): actualizar guía de instalación` |
+| `Style` | Formato (sin cambios de lógica) | `Style: aplicar Prettier a todo el código` |
 
 
 -- -
