@@ -37,7 +37,7 @@ Reglas que se deben seguir para nombras archivos, variables, funciones, etc., y 
 
 ### 2. Estrategia de branches y commits
 
-Los branches se crearan apartir del main, y cada branch correspondera a una funcion mayor especifica y estas pueden tener sub branches segun sea requerido. Ademas, los mensajes de commit siguen la convencion siguiente (ejemplo):
+Los branches se crearan apartir del main, y cada branch correspondera a una funcion mayor especifica y estas pueden tener sub branches segun sea requerido. Ademas, los mensajes de commit siguen la convencion siguiente (ejemplo no establecido, estructura se actualizara despues, lo a continuacion es una posible estructura):
 
 ```
 main              # Producción (código estable)
