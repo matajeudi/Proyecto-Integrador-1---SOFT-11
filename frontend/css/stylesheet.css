@@ -1,0 +1,430 @@
+/* ========================================
+   VARIABLES DE COLOR - LIGHT MODE
+   ======================================== */
+:root {
+  /* Colores principales */
+  --primary-color: #0d6efd;
+  --primary-gradient-start: #667eea;
+  --primary-gradient-end: #764ba2;
+  
+  /* Colores de fondo */
+  --bg-body: #f8f9fa;
+  --bg-content: #ffffff;
+  --bg-card: #ffffff;
+  --bg-item: #f8f9fa;
+  --bg-table-header: #0d6efd;
+  
+  /* Colores de texto */
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --text-light: #ffffff;
+  --text-muted: #6c757d;
+  
+  /* Colores de estado */
+  --status-pending: #ffc107;
+  --status-pending-text: #212529;
+  --status-approved: #198754;
+  --status-approved-text: #ffffff;
+  --status-rejected: #dc3545;
+  --status-rejected-text: #ffffff;
+  --status-in-progress: #0dcaf0;
+  --status-in-progress-text: #212529;
+  
+  /* Colores de bordes */
+  --border-color: #dee2e6;
+  --border-focus: #667eea;
+  
+  /* Colores de botones */
+  --btn-danger: #dc3545;
+  --btn-danger-hover: #c82333;
+  
+  /* Sombras */
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);
+  --shadow-active: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   VARIABLES DE COLOR - DARK MODE
+   ======================================== */
+[data-theme="dark"] {
+  /* Colores principales */
+  --primary-color: #667eea;
+  --primary-gradient-start: #667eea;
+  --primary-gradient-end: #764ba2;
+  
+  /* Colores de fondo */
+  --bg-body: #1a1a1a;
+  --bg-content: #2d2d2d;
+  --bg-card: #2d2d2d;
+  --bg-item: #3a3a3a;
+  --bg-table-header: #1a1a1a;
+  
+  /* Colores de texto */
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --text-light: #e0e0e0;
+  --text-muted: #a0a0a0;
+  
+  /* Colores de estado */
+  --status-pending: #ffc107;
+  --status-pending-text: #212529;
+  --status-approved: #198754;
+  --status-approved-text: #ffffff;
+  --status-rejected: #dc3545;
+  --status-rejected-text: #ffffff;
+  --status-in-progress: #0dcaf0;
+  --status-in-progress-text: #212529;
+  
+  /* Colores de bordes */
+  --border-color: #404040;
+  --border-input: #6a6a6a;
+  --border-focus: #667eea;
+  
+  /* Colores de placeholder */
+  --placeholder-color: #9a9a9a;
+  
+  /* Colores de botones */
+  --btn-danger: #dc3545;
+  --btn-danger-hover: #c82333;
+  
+  /* Sombras */
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-active: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   ESTILOS GENERALES
+   ======================================== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+  color: var(--text-light);
+  padding-top: 56px;
+}
+
+.hero-section h1,
+.hero-section .lead {
+  color: var(--text-light);
+}
+
+.hero-section .btn-outline-light {
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+}
+
+.hero-section .btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #667eea;
+  border-color: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="dark"] .hero-section .btn-outline-light {
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 1);
+  font-weight: 600;
+}
+
+[data-theme="dark"] .hero-section .btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 1);
+  color: #667eea;
+}
+
+caption {
+  caption-side: top;
+  padding: 0.75rem 0;
+  color: inherit;
+}
+
+/* ========================================
+   ANIMACIONES
+   ======================================== */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-active);
+}
+
+.card {
+  animation: fadeIn 0.5s ease;
+}
+
+.list-group-item {
+  transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+  transform: translateX(5px);
+  background-color: var(--bg-item);
+}
+
+.modal.show .modal-dialog {
+  animation: fadeIn 0.3s ease;
+}
+
+.alert {
+  animation: fadeIn 0.5s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  transform: scale(1.01);
+  transition: transform 0.2s ease;
+}
+
+/* ========================================
+   DARK MODE OVERRIDES
+   ======================================== */
+[data-theme="dark"] body {
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .content-section,
+[data-theme="dark"] .card {
+  background-color: var(--bg-content);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .table {
+  background-color: var(--bg-content);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .table th {
+  background-color: var(--bg-table-header);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .table td {
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .activity-item,
+[data-theme="dark"] .user-assignment-item,
+[data-theme="dark"] .holiday-item {
+  background-color: var(--bg-item);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .modal-content {
+  background-color: var(--bg-content);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .modal-body {
+  background-color: var(--bg-content) !important;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+  background-color: var(--bg-item);
+  color: var(--text-primary);
+  border: 1px solid var(--border-input);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+  color: var(--placeholder-color);
+  opacity: 1;
+}
+
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] input[type="time"] {
+  color-scheme: dark;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+  background-color: var(--bg-item);
+  color: var(--text-primary);
+  border-color: var(--border-focus);
+}
+
+[data-theme="dark"] .form-label {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .list-group-item {
+  background-color: var(--bg-content);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .list-group-item.active {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .bg-light {
+  background-color: var(--bg-content) !important;
+}
+
+[data-theme="dark"] .text-dark {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* ========================================
+   COMPONENTES
+   ======================================== */
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.content-section {
+  background: var(--bg-content);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.activity-item {
+  background-color: var(--bg-item);
+  border-radius: 0.5rem;
+  position: relative;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.activity-item h5 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.btn-remove-activity {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  background: var(--btn-danger);
+  color: var(--text-light);
+  border: none;
+  border-radius: 50%;
+  width: 1.875rem;
+  height: 1.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.btn-remove-activity:hover {
+  background: var(--btn-danger-hover);
+}
+
+.card {
+  border: none;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease-in-out;
+  background-color: var(--bg-card);
+}
+
+.card:hover {
+  transform: translateY(-0.125rem);
+}
+
+.table th {
+  background-color: var(--bg-table-header);
+  color: var(--text-light);
+  border: none;
+}
+
+/* ========================================
+   ESTADOS
+   ======================================== */
+.status-pending,
+.status-planning {
+  background-color: var(--status-pending);
+  color: var(--status-pending-text);
+}
+
+.status-approved,
+.status-completed,
+.status-active {
+  background-color: var(--status-approved);
+  color: var(--status-approved-text);
+}
+
+.status-rejected,
+.status-blocked,
+.status-cancelled {
+  background-color: var(--status-rejected);
+  color: var(--status-rejected-text);
+}
+
+.status-in-progress {
+  background-color: var(--status-in-progress);
+  color: var(--status-in-progress-text);
+}
+
+.user-assignment-item,
+.holiday-item {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: var(--bg-item);
+  border-radius: 0.25rem;
+}
+
+.user-assignment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.holiday-item {
+  border-left: 0.25rem solid var(--primary-color);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .content-section {
+    padding: 1rem;
+  }
+  
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+}
