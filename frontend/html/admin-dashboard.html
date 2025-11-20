@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador - Rikimaka</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/stylesheet.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Rikimaka</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3"><i class="bi bi-person-circle"></i> <span id="userName"></span></span>
+                <button class="btn btn-outline-light btn-sm me-2" id="themeToggle" aria-label="Cambiar tema">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                </button>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group">
+                    <button class="list-group-item list-group-item-action active" data-section="vacation-requests">
+                        Solicitudes de Vacaciones
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-section="reports-stats">
+                        Reportes y Estadísticas
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-section="holiday-management">
+                        Gestión de Feriados
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <!-- Seccion Solicitudes de Vacaciones -->
+                <div id="vacation-requests" class="content-section">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <caption class="h3 text-start fw-bold">Solicitudes de Vacaciones Pendientes</caption>
+                            <thead>
+                                <tr>
+                                    <th>Empleado</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Días</th>
+                                    <th>Razón</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vacationRequestsTable">
+                                <!-- Datos cargados dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Seccion Reportes y Estadisticas -->
+                <div id="reports-stats" class="content-section d-none">
+                    <h1 class="h3">Reportes y Estadísticas</h1>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Horas por Proyecto</h2>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="hoursChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Distribución de Carga</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="workloadStats">
+                                        <!-- Estadisticas cargadas dinamicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seccion Gestion de Feriados -->
+                <div id="holiday-management" class="content-section d-none">
+                    <h1 class="h3">Gestión de Feriados</h1>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Agregar Feriado</h2>
+                                </div>
+                                <div class="card-body">
+                                    <form id="holidayForm">
+                                        <div class="mb-3">
+                                            <label for="holidayName" class="form-label text-dark fw-semibold">
+                                                <i class="bi bi-calendar-event"></i> Nombre del Feriado
+                                            </label>
+                                            <input type="text" class="form-control" id="holidayName" placeholder="Ej: Día de la Independencia" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="holidayDate" class="form-label text-dark fw-semibold">
+                                                <i class="bi bi-calendar3"></i> Fecha
+                                            </label>
+                                            <input type="date" class="form-control" id="holidayDate" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-plus-circle"></i> Agregar Feriado
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Feriados Registrados</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="holidaysList">
+                                        <!-- Lista de feriados cargada dinamicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para aprobar/rechazar vacaciones -->
+    <div class="modal fade" id="vacationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
+                    <h2 class="modal-title h5 text-white fw-bold"><i class="bi bi-clipboard-check"></i> Procesar Solicitud</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" style="background-color: #ffffff;">
+                    <form id="vacationApprovalForm">
+                        <input type="hidden" id="vacationId">
+                        <div class="mb-3">
+                            <label for="vacationComments" class="form-label text-dark fw-semibold">
+                                <i class="bi bi-chat-left-text-fill"></i> Comentarios
+                            </label>
+                            <textarea class="form-control" id="vacationComments" rows="3" placeholder="Ingrese comentarios sobre la solicitud (opcional)"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="approveVacation()">Aprobar</button>
+                    <button type="button" class="btn btn-danger" onclick="rejectVacation()">Rechazar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/adminDashboard.js"></script>
+</body>
+</html>
