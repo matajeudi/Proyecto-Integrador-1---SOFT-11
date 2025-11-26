@@ -1,15 +1,67 @@
 const express = require('express');
 const router = express.Router();
-const { loginUser, registerUser, verifyToken } = require('../controllers/authController');
-const { authenticateToken } = require('../middleware/auth');
+const User = require('../models/user.model');
 
-// POST - Login de usuario
-router.post('/login', loginUser);
+// Login
+router.post('/login', async (req, res) => {
+    try {
+        const { userEmail, userPassword } = req.body;
 
-// POST - Registro de usuario
-router.post('/register', registerUser);
+        // Validar que vengan los datos
+        if (!userEmail || !userPassword) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Email y contraseña son requeridos' 
+            });
+        }
 
-// GET - Verificar token
-router.get('/verify', authenticateToken, verifyToken);
+        // Buscar usuario por email
+        const user = await User.findOne({ userEmail: userEmail.toLowerCase() });
+
+        if (!user) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Credenciales invalidas' 
+            });
+        }
+
+        // Verificar contraseña (comparacion directa)
+        if (user.userPassword !== userPassword) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Credenciales invalidas' 
+            });
+        }
+
+        // Verificar que el usuario este activo
+        if (!user.userIsActive) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Usuario inactivo' 
+            });
+        }
+
+        // Login exitoso
+        res.status(200).json({
+            success: true,
+            message: 'Login exitoso',
+            user: {
+                id: user._id,
+                userName: user.userName,
+                userEmail: user.userEmail,
+                userRole: user.userRole,
+                userFullName: user.userFullName,
+                userDepartment: user.userDepartment
+            }
+        });
+
+    } catch (error) {
+        console.error('Error en login:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error en el servidor' 
+        });
+    }
+});
 
 module.exports = router;
