@@ -3,38 +3,49 @@
    ======================================== */
 :root {
   /* Colores principales */
-  --primary-color: #0d6efd;
-  --primary-gradient-start: #667eea;
-  --primary-gradient-end: #764ba2;
+  --primary-color: #4a6fa5;
+  --primary-gradient-start: #66748f;
+  --primary-gradient-end: #4a6fa5;
+  --navbar-bg: #d5e3e6;
+  --hero-bg: #66748f;
   
   /* Colores de fondo */
-  --bg-body: #f8f9fa;
-  --bg-content: #ffffff;
-  --bg-card: #ffffff;
-  --bg-item: #f8f9fa;
-  --bg-table-header: #0d6efd;
+  --bg-body: #fbfaf8;
+  --bg-content: #f9f7f4;
+  --bg-card: #f9f7f4;
+  --bg-item: #f9f7f4;
+  --bg-table-header: #4a6fa5;
   
   /* Colores de texto */
-  --text-primary: #212529;
-  --text-secondary: #6c757d;
+  --text-primary: #000000;
+  --text-secondary: #8b6570;
   --text-light: #ffffff;
-  --text-muted: #6c757d;
+  --text-muted: #8b6570;
+  
+  /* Colores de acento */
+  --accent-primary: #c9647b;
+  --accent-secondary: #8b6570;
+  --accent-link: #4a6fa5;
   
   /* Colores de estado */
   --status-pending: #ffc107;
-  --status-pending-text: #212529;
+  --status-pending-text: #000000;
   --status-approved: #198754;
   --status-approved-text: #ffffff;
   --status-rejected: #dc3545;
   --status-rejected-text: #ffffff;
-  --status-in-progress: #0dcaf0;
-  --status-in-progress-text: #212529;
+  --status-in-progress: #4a6fa5;
+  --status-in-progress-text: #ffffff;
   
   /* Colores de bordes */
-  --border-color: #dee2e6;
-  --border-focus: #667eea;
+  --border-color: #d5e3e6;
+  --border-focus: #4a6fa5;
   
   /* Colores de botones */
+  --btn-primary: #c9647b;
+  --btn-primary-hover: #b55569;
+  --btn-secondary: #8b6570;
+  --btn-secondary-hover: #7a5763;
   --btn-danger: #dc3545;
   --btn-danger-hover: #c82333;
   
@@ -49,49 +60,60 @@
    ======================================== */
 [data-theme="dark"] {
   /* Colores principales */
-  --primary-color: #667eea;
-  --primary-gradient-start: #667eea;
-  --primary-gradient-end: #764ba2;
+  --primary-color: #5a7a9e;
+  --primary-gradient-start: #8b9ab5;
+  --primary-gradient-end: #5a7a9e;
+  --navbar-bg: #1a2d32;
+  --hero-bg: #8b9ab5;
   
   /* Colores de fondo */
-  --bg-body: #1a1a1a;
-  --bg-content: #2d2d2d;
-  --bg-card: #2d2d2d;
-  --bg-item: #3a3a3a;
-  --bg-table-header: #1a1a1a;
+  --bg-body: #1c1b19;
+  --bg-content: #2a2826;
+  --bg-card: #2a2826;
+  --bg-item: #2a2826;
+  --bg-table-header: #1a2d32;
   
   /* Colores de texto */
-  --text-primary: #e0e0e0;
-  --text-secondary: #a0a0a0;
-  --text-light: #e0e0e0;
-  --text-muted: #a0a0a0;
+  --text-primary: #e8e6e3;
+  --text-secondary: #a67c8a;
+  --text-light: #ffffff;
+  --text-muted: #a67c8a;
+  
+  /* Colores de acento */
+  --accent-primary: #d4879c;
+  --accent-secondary: #a67c8a;
+  --accent-link: #5a7a9e;
   
   /* Colores de estado */
   --status-pending: #ffc107;
-  --status-pending-text: #212529;
+  --status-pending-text: #000000;
   --status-approved: #198754;
   --status-approved-text: #ffffff;
   --status-rejected: #dc3545;
   --status-rejected-text: #ffffff;
-  --status-in-progress: #0dcaf0;
-  --status-in-progress-text: #212529;
+  --status-in-progress: #5a7a9e;
+  --status-in-progress-text: #ffffff;
   
   /* Colores de bordes */
-  --border-color: #404040;
-  --border-input: #6a6a6a;
-  --border-focus: #667eea;
+  --border-color: #3a3836;
+  --border-input: #4a4846;
+  --border-focus: #5a7a9e;
   
   /* Colores de placeholder */
   --placeholder-color: #9a9a9a;
   
   /* Colores de botones */
+  --btn-primary: #d4879c;
+  --btn-primary-hover: #e098ad;
+  --btn-secondary: #a67c8a;
+  --btn-secondary-hover: #b88d9b;
   --btn-danger: #dc3545;
   --btn-danger-hover: #c82333;
   
   /* Sombras */
-  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
-  --shadow-active: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.6);
+  --shadow-active: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* ========================================
@@ -118,6 +140,19 @@ html {
   color: var(--text-light);
 }
 
+.hero-image {
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.hero-image:hover {
+  transform: scale(1.05);
+}
+
+[data-theme="dark"] .hero-image {
+  filter: drop-shadow(0 10px 30px rgba(255, 255, 255, 0.1));
+}
+
 .hero-section .btn-outline-light {
   border: 2px solid rgba(255, 255, 255, 0.9);
   color: rgba(255, 255, 255, 0.95);
@@ -128,6 +163,11 @@ html {
   background-color: rgba(255, 255, 255, 0.95);
   color: #667eea;
   border-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Reescribir el tamano del hero section de boostrap - toma 75% del tamano del viewport*/
+.min-vh-75 {
+  min-height: 75vh !important;
 }
 
 [data-theme="dark"] .hero-section .btn-outline-light {
@@ -178,6 +218,51 @@ caption {
 .btn:active {
   transform: translateY(0);
   box-shadow: var(--shadow-active);
+}
+
+.btn-primary {
+  background-color: var(--btn-primary) !important;
+  border-color: var(--btn-primary) !important;
+  color: var(--text-light) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--btn-primary-hover) !important;
+  border-color: var(--btn-primary-hover) !important;
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary) !important;
+  border-color: var(--btn-secondary) !important;
+  color: var(--text-light) !important;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: var(--btn-secondary-hover) !important;
+  border-color: var(--btn-secondary-hover) !important;
+}
+
+.btn-danger {
+  background-color: var(--btn-danger) !important;
+  border-color: var(--btn-danger) !important;
+}
+
+.btn-danger:hover,
+.btn-danger:focus {
+  background-color: var(--btn-danger-hover) !important;
+  border-color: var(--btn-danger-hover) !important;
+}
+
+.btn-outline-primary {
+  color: var(--btn-primary) !important;
+  border-color: var(--btn-primary) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--btn-primary) !important;
+  color: var(--text-light) !important;
 }
 
 .card {
@@ -307,9 +392,35 @@ caption {
 /* ========================================
    COMPONENTES
    ======================================== */
+.navbar {
+  background-color: var(--navbar-bg) !important;
+}
+
 .navbar-brand {
   font-weight: 700;
   font-size: 1.5rem;
+  color: var(--text-primary) !important;
+}
+
+.navbar .nav-link {
+  color: var(--text-primary) !important;
+}
+
+.navbar .nav-link:hover {
+  color: var(--accent-link) !important;
+}
+
+[data-theme="dark"] .navbar {
+  background-color: var(--navbar-bg) !important;
+}
+
+[data-theme="dark"] .navbar-brand,
+[data-theme="dark"] .navbar .nav-link {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .navbar .nav-link:hover {
+  color: var(--accent-link) !important;
 }
 
 .content-section {

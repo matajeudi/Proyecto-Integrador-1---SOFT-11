@@ -1,8 +1,12 @@
+<<<<<<< Updated upstream
 <<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
 
 backend/node_modules/
 
 backend/.env
+<<<<<<< Updated upstream
 =======
 # Dependencias
 node_modules/
@@ -39,3 +43,5 @@ build/
 *.tmp
 *.temp
 >>>>>>> project-documentation
+=======
+>>>>>>> Stashed changes
