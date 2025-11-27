@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
+const bcrypt = require('bcryptjs');
 
 // Login
 router.post('/login', async (req, res) => {
@@ -25,8 +26,9 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        // Verificar contraseña (comparacion directa)
-        if (user.userPassword !== userPassword) {
+        // Verificar contraseña con bcrypt
+        const isPasswordValid = await bcrypt.compare(userPassword, user.userPassword);
+        if (!isPasswordValid) {
             return res.status(401).json({ 
                 success: false, 
                 message: 'Credenciales invalidas' 
