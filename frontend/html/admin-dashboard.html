@@ -126,7 +126,7 @@
                                             <label for="periodName" class="form-label text-dark fw-semibold">
                                                 <i class="bi bi-calendar-range" aria-hidden="true"></i> Nombre del Período
                                             </label>
-                                            <input type="text" class="form-control" id="periodName" placeholder="Ej: Vacaciones 2025" required>
+                                            <input type="text" class="form-control" id="periodName" placeholder="Ej: Vacaciones 2025" minlength="3" maxlength="100" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="periodStartDate" class="form-label text-dark fw-semibold">
@@ -144,7 +144,7 @@
                                             <label for="periodDescription" class="form-label text-dark fw-semibold">
                                                 <i class="bi bi-card-text" aria-hidden="true"></i> Descripción (Opcional)
                                             </label>
-                                            <textarea class="form-control" id="periodDescription" rows="2" placeholder="Descripción del período"></textarea>
+                                            <textarea class="form-control" id="periodDescription" rows="2" placeholder="Descripción del período" maxlength="500"></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary">
                                             <i class="bi bi-plus-circle" aria-hidden="true"></i> Agregar Período
@@ -183,7 +183,7 @@
                                             <label for="holidayName" class="form-label text-dark fw-semibold">
                                                 <i class="bi bi-calendar-event" aria-hidden="true"></i> Nombre del Feriado
                                             </label>
-                                            <input type="text" class="form-control" id="holidayName" placeholder="Ej: Día de la Independencia" required>
+                                            <input type="text" class="form-control" id="holidayName" placeholder="Ej: Día de la Independencia" minlength="3" maxlength="100" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="holidayDate" class="form-label text-dark fw-semibold">

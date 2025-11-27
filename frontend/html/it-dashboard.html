@@ -147,20 +147,20 @@
                                 <label for="projectName" class="form-label text-dark fw-semibold">
                                     <i class="bi bi-briefcase" aria-hidden="true"></i> Nombre del Proyecto
                                 </label>
-                                <input type="text" class="form-control" id="projectName" placeholder="Ej: Sistema de Gestión" required>
+                                <input type="text" class="form-control" id="projectName" placeholder="Ej: Sistema de Gestión" minlength="3" maxlength="100" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="projectBudget" class="form-label text-dark fw-semibold">
                                     <i class="bi bi-currency-dollar" aria-hidden="true"></i> Presupuesto
                                 </label>
-                                <input type="number" class="form-control" id="projectBudget" min="0" placeholder="Ej: 50000" required>
+                                <input type="number" class="form-control" id="projectBudget" min="1" max="999999999" step="0.01" placeholder="Ej: 50000" required>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="projectDescription" class="form-label text-dark fw-semibold">
                                 <i class="bi bi-file-text" aria-hidden="true"></i> Descripción
                             </label>
-                            <textarea class="form-control" id="projectDescription" rows="3" placeholder="Describa los objetivos y alcance del proyecto" required></textarea>
+                            <textarea class="form-control" id="projectDescription" rows="3" placeholder="Describa los objetivos y alcance del proyecto" minlength="10" maxlength="1000" required></textarea>
                         </div>
                         <div class="row">
                             <div class="col-md-6">

@@ -23,11 +23,11 @@ const CalendarView = {
 
     let html = `
       <div class="calendar-header">
-        <button class="btn btn-sm btn-outline-secondary" onclick="CalendarView.previousMonth('${containerId}')">
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="CalendarView.previousMonth('${containerId}', event)">
           <i class="bi bi-chevron-left"></i>
         </button>
         <h5 class="mb-0">${this.getMonthName(month)} ${year}</h5>
-        <button class="btn btn-sm btn-outline-secondary" onclick="CalendarView.nextMonth('${containerId}')">
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="CalendarView.nextMonth('${containerId}', event)">
           <i class="bi bi-chevron-right"></i>
         </button>
       </div>
@@ -148,7 +148,8 @@ const CalendarView = {
   },
 
   // Navega al mes anterior y recarga calendario
-  previousMonth(containerId) {
+  previousMonth(containerId, event) {
+    if (event) event.preventDefault();
     const container = document.getElementById(containerId);
     const currentMonth = new Date(container.dataset.currentMonth);
     currentMonth.setMonth(currentMonth.getMonth() - 1);
@@ -157,7 +158,8 @@ const CalendarView = {
   },
 
   // Navega al mes siguiente y recarga calendario
-  nextMonth(containerId) {
+  nextMonth(containerId, event) {
+    if (event) event.preventDefault();
     const container = document.getElementById(containerId);
     const currentMonth = new Date(container.dataset.currentMonth);
     currentMonth.setMonth(currentMonth.getMonth() + 1);

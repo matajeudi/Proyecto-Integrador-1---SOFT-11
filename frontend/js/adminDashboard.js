@@ -381,10 +381,23 @@ function displayWorkloadStats(stats) {
 async function handleHolidaySubmit(e) {
     e.preventDefault();
     
+    const holidayName = document.getElementById('holidayName').value.trim();
+    const holidayDate = document.getElementById('holidayDate').value;
+    
+    if (holidayName.length < 3) {
+        showError('El nombre del feriado debe tener al menos 3 caracteres');
+        return;
+    }
+    
+    if (holidayName.length > 100) {
+        showError('El nombre del feriado no puede exceder 100 caracteres');
+        return;
+    }
+    
     // Obtener datos del formulario
     const holidayData = {
-        holidayName: document.getElementById('holidayName').value,
-        holidayDate: document.getElementById('holidayDate').value
+        holidayName: holidayName,
+        holidayDate: holidayDate
     };
     
     try {
@@ -532,12 +545,32 @@ function showError(message) {
 async function handlePeriodSubmit(e) {
     e.preventDefault();
     
+    const periodName = document.getElementById('periodName').value.trim();
+    const periodStartDate = document.getElementById('periodStartDate').value;
+    const periodEndDate = document.getElementById('periodEndDate').value;
+    const periodDescription = document.getElementById('periodDescription').value.trim();
+    
+    if (periodName.length < 3) {
+        showError('El nombre del periodo debe tener al menos 3 caracteres');
+        return;
+    }
+    
+    if (periodName.length > 100) {
+        showError('El nombre del periodo no puede exceder 100 caracteres');
+        return;
+    }
+    
+    if (periodDescription && periodDescription.length > 500) {
+        showError('La descripcion no puede exceder 500 caracteres');
+        return;
+    }
+    
     // Obtener datos del formulario
     const periodData = {
-        periodName: document.getElementById('periodName').value,
-        periodStartDate: document.getElementById('periodStartDate').value,
-        periodEndDate: document.getElementById('periodEndDate').value,
-        periodDescription: document.getElementById('periodDescription').value
+        periodName: periodName,
+        periodStartDate: periodStartDate,
+        periodEndDate: periodEndDate,
+        periodDescription: periodDescription
     };
     
     // Validar que la fecha de fin sea posterior a la fecha de inicio
