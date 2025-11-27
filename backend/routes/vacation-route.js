@@ -65,9 +65,17 @@ router.post('/', async (req, res) => {
     const populatedVacation = await Vacation.findById(savedVacation._id)
       .populate('vacationUser', 'userName userFullName userDepartment');
     
-    res.status(201).json(populatedVacation);
+    res.status(201).json({
+      success: true,
+      message: 'Solicitud creada correctamente',
+      vacation: populatedVacation
+    });
   } catch (error) {
-    res.status(400).json({ message: 'Error creando solicitud de vacaciones', error: error.message });
+    res.status(400).json({ 
+      success: false,
+      message: 'Error creando solicitud de vacaciones', 
+      error: error.message 
+    });
   }
 });
 
@@ -89,12 +97,23 @@ router.put('/:id/approve', async (req, res) => {
      .populate('vacationApprovedBy', 'userName userFullName');
 
     if (!updatedVacation) {
-      return res.status(404).json({ message: 'Solicitud no encontrada' });
+      return res.status(404).json({ 
+        success: false,
+        message: 'Solicitud no encontrada' 
+      });
     }
 
-    res.json(updatedVacation);
+    res.json({
+      success: true,
+      message: 'Solicitud procesada correctamente',
+      vacation: updatedVacation
+    });
   } catch (error) {
-    res.status(400).json({ message: 'Error procesando solicitud', error: error.message });
+    res.status(400).json({ 
+      success: false,
+      message: 'Error procesando solicitud', 
+      error: error.message 
+    });
   }
 });
 

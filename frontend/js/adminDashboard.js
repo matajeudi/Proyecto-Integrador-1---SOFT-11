@@ -146,6 +146,9 @@ function setupEventListeners() {
 
     // Formulario de feriados
     document.getElementById('holidayForm').addEventListener('submit', handleHolidaySubmit);
+    
+    // Formulario de periodos de vacaciones
+    document.getElementById('periodForm').addEventListener('submit', handlePeriodSubmit);
 }
 
 // Mostrar seccion especifica
@@ -165,6 +168,9 @@ function showSection(sectionId) {
             break;
         case 'holiday-management':
             loadHolidays();
+            break;
+        case 'vacation-periods':
+            loadVacationPeriods();
             break;
     }
 }
@@ -509,4 +515,134 @@ function showAlert(message, type) {
     setTimeout(() => {
         alertDiv.remove();
     }, 5000);
+}
+
+
+// ========== FUNCIONES PARA PERIODOS DE VACACIONES ==========
+
+// Manejar envio de formulario de periodos de vacaciones
+async function handlePeriodSubmit(e) {
+    e.preventDefault();
+    
+    // Obtener datos del formulario
+    const periodData = {
+        periodName: document.getElementById('periodName').value,
+        periodStartDate: document.getElementById('periodStartDate').value,
+        periodEndDate: document.getElementById('periodEndDate').value,
+        periodDescription: document.getElementById('periodDescription').value
+    };
+    
+    // Validar que la fecha de fin sea posterior a la fecha de inicio
+    if (new Date(periodData.periodEndDate) <= new Date(periodData.periodStartDate)) {
+        showError('La fecha de fin debe ser posterior a la fecha de inicio');
+        return;
+    }
+    
+    try {
+        // Enviar peticion POST al backend para crear periodo
+        const response = await fetch(`${API_BASE_URL}/vacation-periods`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(periodData)
+        });
+        
+        const result = await response.json();
+        
+        // Verificar si la operacion fue exitosa
+        if (result.success) {
+            showSuccess('Periodo agregado correctamente');
+            e.target.reset(); // Limpiar formulario
+            loadVacationPeriods(); // Recargar lista de periodos
+        } else {
+            showError(result.message || 'Error agregando periodo');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showError('Error conectando con el servidor');
+    }
+}
+
+// Cargar lista de periodos de vacaciones desde el backend
+async function loadVacationPeriods() {
+    try {
+        // Obtener todos los periodos activos de la base de datos
+        const response = await fetch(`${API_BASE_URL}/vacation-periods`);
+        const result = await response.json();
+        
+        if (result.success) {
+            displayVacationPeriods(result.periods);
+        } else {
+            showError('Error cargando periodos');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showError('Error conectando con el servidor');
+    }
+}
+
+// Mostrar lista de periodos de vacaciones en el HTML
+function displayVacationPeriods(periods) {
+    const container = document.getElementById('periodsList');
+    
+    // Verificar si hay periodos para mostrar
+    if (periods.length === 0) {
+        container.innerHTML = '<p class="text-muted">No hay periodos registrados</p>';
+        return;
+    }
+    
+    // Crear HTML para cada periodo con boton de eliminar
+    container.innerHTML = periods.map(period => {
+        // Calcular duracion del periodo en dias
+        const startDate = new Date(period.periodStartDate);
+        const endDate = new Date(period.periodEndDate);
+        const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        
+        return `
+            <div class="period-item mb-3 p-3 border rounded">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h3 class="h6 fw-bold mb-1">${period.periodName}</h3>
+                        <small class="text-muted">
+                            <i class="bi bi-calendar-range"></i> 
+                            ${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)}
+                            <span class="badge bg-info ms-2">${duration} días</span>
+                        </small>
+                        ${period.periodDescription ? `<p class="mb-0 mt-2 small">${period.periodDescription}</p>` : ''}
+                    </div>
+                    <button class="btn btn-sm btn-danger" onclick="deleteVacationPeriod('${period._id}')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Eliminar periodo de vacaciones de la base de datos
+async function deleteVacationPeriod(periodId) {
+    // Confirmar accion con el usuario
+    if (!confirm('¿Está seguro de eliminar este periodo?')) {
+        return;
+    }
+    
+    try {
+        // Enviar peticion DELETE al backend
+        const response = await fetch(`${API_BASE_URL}/vacation-periods/${periodId}`, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showSuccess('Periodo eliminado correctamente');
+            loadVacationPeriods(); // Recargar lista actualizada
+        } else {
+            showError('Error eliminando periodo');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showError('Error conectando con el servidor');
+    }
 }

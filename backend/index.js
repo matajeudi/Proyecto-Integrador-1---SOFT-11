@@ -16,7 +16,9 @@ const userRoute = require('./routes/user-route');
 const projectRoute = require('./routes/project-route');
 const reportRoute = require('./routes/report-route');
 const vacationRoute = require('./routes/vacation-route');
+const vacationPeriodRoute = require('./routes/vacationPeriod-route');
 const holidayRoute = require('./routes/holiday-route');
+const auditLogRoute = require('./routes/auditLog-route');
 
 
 app.use(express.json()); //Habilita el manejo de JSON en las peticiones
@@ -39,7 +41,9 @@ app.use('/api/users', userRoute);
 app.use('/api/projects', projectRoute);
 app.use('/api/reports', reportRoute);
 app.use('/api/vacations', vacationRoute);
+app.use('/api/vacation-periods', vacationPeriodRoute);
 app.use('/api/holidays', holidayRoute);
+app.use('/api/audit-logs', auditLogRoute);
 
 app.get('/', (req, res) => {
     res.send('Servidor de Rikimaka en funcionamiento');
