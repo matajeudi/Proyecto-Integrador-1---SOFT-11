@@ -34,7 +34,7 @@ const CalendarView = {
       <div class="calendar-legend">
         <span class="legend-item"><span class="legend-color" style="background: ${this.eventColors.holiday}"></span> Feriados</span>
         <span class="legend-item"><span class="legend-color" style="background: ${this.eventColors.vacation}"></span> Vacaciones</span>
-        <span class="legend-item"><span class="legend-color" style="background: ${this.eventColors.period}"></span> Periodos</span>
+        <span class="legend-item"><span class="legend-color" style="background: ${this.eventColors.period}"></span> No disponible</span>
       </div>
       <div class="calendar-grid">
         <div class="calendar-day-header">Dom</div>
@@ -219,13 +219,14 @@ const CalendarView = {
       });
       const vacationsData = await vacationsRes.json();
       
-      if (vacationsData.success) {
-        vacationsData.vacations
+      if (Array.isArray(vacationsData)) {
+        vacationsData
           .filter(vac => vac.vacationStatus === 'approved')
           .forEach(vacation => {
+            const workerName = vacation.vacationUser?.userFullName || 'Usuario';
             events.push({
               type: 'vacation',
-              title: 'Vacaciones',
+              title: workerName,
               startDate: vacation.vacationStartDate,
               endDate: vacation.vacationEndDate
             });
