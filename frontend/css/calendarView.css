@@ -101,6 +101,51 @@
   cursor: help;
 }
 
+/* Dark mode - Mejor contraste */
+[data-theme="dark"] .calendar-header {
+  background: #2a2826;
+  border: 1px solid #4a4846;
+}
+
+[data-theme="dark"] .calendar-legend {
+  background: #2a2826;
+  border-color: #4a4846;
+  color: #e8e6e3;
+}
+
+[data-theme="dark"] .calendar-day-header {
+  background: #3a3836;
+  color: #e8e6e3;
+}
+
+[data-theme="dark"] .calendar-day {
+  background: #2a2826;
+  color: #e8e6e3;
+  border: 1px solid #3a3836;
+}
+
+[data-theme="dark"] .calendar-day:hover {
+  background: #3a3836;
+}
+
+[data-theme="dark"] .calendar-day.empty {
+  background: #1c1b19;
+}
+
+[data-theme="dark"] .calendar-day.today {
+  background: #4a4020;
+  border: 2px solid #ffc107;
+}
+
+[data-theme="dark"] .day-number {
+  color: #e8e6e3;
+}
+
+[data-theme="dark"] .calendar-grid {
+  background: #3a3836;
+  border-color: #4a4846;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .calendar-day {

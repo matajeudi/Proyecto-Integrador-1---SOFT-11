@@ -458,7 +458,18 @@ function displayHolidays(holidays) {
 // Eliminar feriado de la base de datos
 async function deleteHoliday(holidayId) {
     // Confirmar accion con el usuario
-    if (!confirm('¿Está seguro de eliminar este feriado?')) {
+    const result = await Swal.fire({
+        title: '¿Está seguro?',
+        text: 'Se eliminará este feriado',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d'
+    });
+    
+    if (!result.isConfirmed) {
         return;
     }
     
@@ -495,26 +506,23 @@ function formatDate(dateString) {
 }
 
 function showSuccess(message) {
-    showAlert(message, 'success');
+    Swal.fire({
+        title: 'Exitoso',
+        text: message,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#198754'
+    });
 }
 
 function showError(message) {
-    showAlert(message, 'danger');
-}
-
-function showAlert(message, type) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    document.querySelector('.container-fluid').prepend(alertDiv);
-    
-    setTimeout(() => {
-        alertDiv.remove();
-    }, 5000);
+    Swal.fire({
+        title: 'Error',
+        text: message,
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#dc3545'
+    });
 }
 
 
@@ -627,7 +635,18 @@ function displayVacationPeriods(periods) {
 // Eliminar periodo de vacaciones de la base de datos
 async function deleteVacationPeriod(periodId) {
     // Confirmar accion con el usuario
-    if (!confirm('¿Está seguro de eliminar este periodo?')) {
+    const result = await Swal.fire({
+        title: '¿Está seguro?',
+        text: 'Se eliminará este periodo de vacaciones',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d'
+    });
+    
+    if (!result.isConfirmed) {
         return;
     }
     
