@@ -130,6 +130,8 @@ async function handleVacationRequest(e) {
         return;
     }
     
+    const form = e.target;
+    const editId = form.dataset.editId;
     const startDate = document.getElementById('vacationStartDate').value;
     const endDate = document.getElementById('vacationEndDate').value;
     const reason = document.getElementById('vacationReason').value.trim();
@@ -178,21 +180,29 @@ async function handleVacationRequest(e) {
     };
     
     try {
-        const response = await fetch(`${API_BASE_URL}/vacations`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(vacationData)
-        });
+        let response;
+        if (editId) {
+            response = await fetch(`${API_BASE_URL}/vacations/${editId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(vacationData)
+            });
+        } else {
+            response = await fetch(`${API_BASE_URL}/vacations`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(vacationData)
+            });
+        }
         
         const result = await response.json();
         
         if (response.ok) {
-            showSuccess('Solicitud de vacaciones enviada correctamente');
-            e.target.reset();
+            showSuccess(editId ? 'Solicitud actualizada correctamente' : 'Solicitud de vacaciones enviada correctamente');
+            form.reset();
+            delete form.dataset.editId;
         } else {
-            showError(result.message || result.error || 'Error enviando solicitud');
+            showError(result.message || result.error || 'Error procesando solicitud');
         }
     } catch (error) {
         console.error('Error completo:', error);
@@ -257,18 +267,34 @@ function displayMyVacations(vacations) {
     const tbody = document.getElementById('myVacationsTable');
     
     if (vacations.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No tiene solicitudes de vacaciones</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No tiene solicitudes de vacaciones</td></tr>';
         return;
     }
     
     tbody.innerHTML = vacations.map(vacation => {
         let statusBadge = '';
+        let actions = '';
+        
         if (vacation.vacationStatus === 'pending') {
             statusBadge = '<span class="badge bg-warning">Pendiente</span>';
+            actions = `
+                <button class="btn btn-sm btn-primary me-1" onclick="editVacation('${vacation._id}')">
+                    <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deleteVacation('${vacation._id}')">
+                    <i class="bi bi-trash"></i>
+                </button>
+            `;
         } else if (vacation.vacationStatus === 'approved') {
             statusBadge = '<span class="badge bg-success">Aprobada</span>';
+            actions = `
+                <button class="btn btn-sm btn-danger" onclick="deleteVacation('${vacation._id}')">
+                    <i class="bi bi-trash"></i>
+                </button>
+            `;
         } else {
             statusBadge = '<span class="badge bg-danger">Rechazada</span>';
+            actions = '-';
         }
         
         return `
@@ -279,6 +305,7 @@ function displayMyVacations(vacations) {
                 <td>${vacation.vacationDays}</td>
                 <td>${statusBadge}</td>
                 <td>${vacation.vacationComments || '-'}</td>
+                <td>${actions}</td>
             </tr>
         `;
     }).join('');
@@ -573,6 +600,55 @@ function showError(message) {
         confirmButtonText: 'Aceptar',
         confirmButtonColor: '#dc3545'
     });
+}
+
+async function editVacation(vacationId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/vacations/${vacationId}`);
+        const vacation = await response.json();
+        
+        document.getElementById('vacationStartDate').value = vacation.vacationStartDate.split('T')[0];
+        document.getElementById('vacationEndDate').value = vacation.vacationEndDate.split('T')[0];
+        document.getElementById('vacationReason').value = vacation.vacationReason;
+        
+        document.getElementById('vacationRequestForm').dataset.editId = vacationId;
+        
+        showSection('vacation-request');
+        document.querySelectorAll('.list-group-item').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-section="vacation-request"]').classList.add('active');
+    } catch (error) {
+        showError('Error cargando solicitud');
+    }
+}
+
+async function deleteVacation(vacationId) {
+    const result = await Swal.fire({
+        title: '¿Está seguro?',
+        text: 'Se eliminará esta solicitud de vacaciones',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d'
+    });
+    
+    if (!result.isConfirmed) return;
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/vacations/${vacationId}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            showSuccess('Solicitud eliminada correctamente');
+            loadMyVacations();
+        } else {
+            showError('Error eliminando solicitud');
+        }
+    } catch (error) {
+        showError('Error conectando con el servidor');
+    }
 }
 
 // Cargar periodos de vacaciones

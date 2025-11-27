@@ -15,6 +15,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Obtener feriado por ID
+// GET /api/holidays/:id
+router.get('/:id', async (req, res) => {
+    try {
+        const holiday = await Holiday.findById(req.params.id);
+        if (!holiday) {
+            return res.status(404).json({ success: false, message: 'Feriado no encontrado' });
+        }
+        res.status(200).json({ success: true, holiday });
+    } catch (error) {
+        console.error('Error obteniendo feriado:', error);
+        res.status(500).json({ success: false, message: 'Error en el servidor' });
+    }
+});
+
 // Crear nuevo feriado
 // POST /api/holidays
 router.post('/', async (req, res) => {
@@ -68,16 +83,28 @@ router.put('/:id', async (req, res) => {
         }
 
         // Verificar duplicado de fecha si se esta cambiando la fecha
-        if (holidayDate && holidayDate !== holiday.holidayDate.toISOString()) {
-            const existingHoliday = await Holiday.findOne({ 
-                holidayDate: new Date(holidayDate),
-                _id: { $ne: req.params.id } // Excluir el feriado actual
-            });
-            if (existingHoliday) {
-                return res.status(400).json({ 
-                    success: false, 
-                    message: 'Ya existe un feriado en esta fecha' 
+        if (holidayDate) {
+            const newDate = new Date(holidayDate);
+            newDate.setHours(0, 0, 0, 0);
+            const currentDate = new Date(holiday.holidayDate);
+            currentDate.setHours(0, 0, 0, 0);
+            
+            if (newDate.getTime() !== currentDate.getTime()) {
+                const existingHoliday = await Holiday.findOne({ 
+                    _id: { $ne: req.params.id }
                 });
+                
+                if (existingHoliday) {
+                    const existingDate = new Date(existingHoliday.holidayDate);
+                    existingDate.setHours(0, 0, 0, 0);
+                    
+                    if (existingDate.getTime() === newDate.getTime()) {
+                        return res.status(400).json({ 
+                            success: false, 
+                            message: 'Ya existe un feriado en esta fecha' 
+                        });
+                    }
+                }
             }
         }
 
