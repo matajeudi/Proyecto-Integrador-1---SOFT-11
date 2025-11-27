@@ -564,10 +564,14 @@ async function handlePeriodSubmit(e) {
     }
 }
 
-// Cargar lista de periodos de vacaciones desde el backend
+// Carga periodos de vacaciones y renderiza calendario visual
 async function loadVacationPeriods() {
     try {
-        // Obtener todos los periodos activos de la base de datos
+        // Renderiza calendario con todos los eventos
+        const events = await CalendarView.fetchAllEvents();
+        CalendarView.renderFullCalendar('adminEventsCalendar', events);
+        
+        // Obtiene periodos activos desde API
         const response = await fetch(`${API_BASE_URL}/vacation-periods`);
         const result = await response.json();
         
