@@ -132,10 +132,30 @@ async function handleVacationRequest(e) {
     
     const startDate = document.getElementById('vacationStartDate').value;
     const endDate = document.getElementById('vacationEndDate').value;
-    const reason = document.getElementById('vacationReason').value;
+    const reason = document.getElementById('vacationReason').value.trim();
     
     if (!startDate || !endDate || !reason) {
         showError('Todos los campos son requeridos');
+        return;
+    }
+    
+    if (reason.length < 10) {
+        showError('La razon debe tener al menos 10 caracteres');
+        return;
+    }
+    
+    if (reason.length > 500) {
+        showError('La razon no puede exceder 500 caracteres');
+        return;
+    }
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(startDate + 'T00:00:00');
+    start.setHours(0, 0, 0, 0);
+    
+    if (start < today) {
+        showError('La fecha de inicio no puede ser anterior a hoy');
         return;
     }
     
@@ -335,7 +355,7 @@ function addActivity() {
             <label for="activityDescription${activityCount - 1}" class="form-label text-dark fw-semibold">
                 <i class="bi bi-file-text"></i> Descripción de Actividad
             </label>
-            <textarea class="form-control" id="activityDescription${activityCount - 1}" rows="3" placeholder="Describa las tareas realizadas" required></textarea>
+            <textarea class="form-control" id="activityDescription${activityCount - 1}" rows="3" placeholder="Describa las tareas realizadas" minlength="10" maxlength="500" required></textarea>
         </div>
         <div class="mb-3">
             <label for="activityStatus${activityCount - 1}" class="form-label text-dark fw-semibold">
@@ -377,8 +397,8 @@ async function handleDailyReportSubmit(e) {
     
     for (let i = 0; i < activityItems.length; i++) {
         const project = document.getElementById(`activityProject${i}`).value;
-        const hours = document.getElementById(`activityHours${i}`).value;
-        const description = document.getElementById(`activityDescription${i}`).value;
+        const hours = parseFloat(document.getElementById(`activityHours${i}`).value);
+        const description = document.getElementById(`activityDescription${i}`).value.trim();
         const status = document.getElementById(`activityStatus${i}`).value;
         
         if (!project || !hours || !description || !status) {
@@ -386,12 +406,33 @@ async function handleDailyReportSubmit(e) {
             return;
         }
         
+        if (description.length < 10) {
+            showError(`La descripcion de la actividad ${i + 1} debe tener al menos 10 caracteres`);
+            return;
+        }
+        
+        if (description.length > 500) {
+            showError(`La descripcion de la actividad ${i + 1} no puede exceder 500 caracteres`);
+            return;
+        }
+        
+        if (hours < 0.5 || hours > 24) {
+            showError(`Las horas de la actividad ${i + 1} deben estar entre 0.5 y 24`);
+            return;
+        }
+        
         activities.push({
             activityProject: project,
-            activityHours: parseFloat(hours),
+            activityHours: hours,
             activityDescription: description,
             activityStatus: status
         });
+    }
+    
+    const totalHours = activities.reduce((sum, act) => sum + act.activityHours, 0);
+    if (totalHours > 24) {
+        showError(`El total de horas (${totalHours}h) no puede exceder 24 horas en un dia`);
+        return;
     }
     
     if (activities.length === 0) {
@@ -441,7 +482,7 @@ async function handleDailyReportSubmit(e) {
                         <label for="activityDescription0" class="form-label text-dark fw-semibold">
                             <i class="bi bi-file-text"></i> Descripción de Actividad
                         </label>
-                        <textarea class="form-control" id="activityDescription0" rows="3" placeholder="Describa las tareas realizadas" required></textarea>
+                        <textarea class="form-control" id="activityDescription0" rows="3" placeholder="Describa las tareas realizadas" minlength="10" maxlength="500" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="activityStatus0" class="form-label text-dark fw-semibold">
