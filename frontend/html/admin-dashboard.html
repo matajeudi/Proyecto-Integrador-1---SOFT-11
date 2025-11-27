@@ -37,6 +37,9 @@
                     <button class="list-group-item list-group-item-action" data-section="holiday-management">
                         Gestión de Feriados
                     </button>
+                    <button class="list-group-item list-group-item-action" data-section="vacation-periods">
+                        Períodos de Vacaciones
+                    </button>
                 </div>
             </div>
 
@@ -85,6 +88,63 @@
                                 <div class="card-body">
                                     <div id="workloadStats">
                                         <!-- Estadisticas cargadas dinamicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seccion Periodos de Vacaciones -->
+                <div id="vacation-periods" class="content-section d-none">
+                    <h1 class="h3">Períodos de Vacaciones</h1>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Agregar Período</h2>
+                                </div>
+                                <div class="card-body">
+                                    <form id="periodForm">
+                                        <div class="mb-3">
+                                            <label for="periodName" class="form-label text-dark fw-semibold">
+                                                <i class="bi bi-calendar-range"></i> Nombre del Período
+                                            </label>
+                                            <input type="text" class="form-control" id="periodName" placeholder="Ej: Vacaciones 2025" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="periodStartDate" class="form-label text-dark fw-semibold">
+                                                <i class="bi bi-calendar-check"></i> Fecha Inicio
+                                            </label>
+                                            <input type="date" class="form-control" id="periodStartDate" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="periodEndDate" class="form-label text-dark fw-semibold">
+                                                <i class="bi bi-calendar-x"></i> Fecha Fin
+                                            </label>
+                                            <input type="date" class="form-control" id="periodEndDate" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="periodDescription" class="form-label text-dark fw-semibold">
+                                                <i class="bi bi-card-text"></i> Descripción (Opcional)
+                                            </label>
+                                            <textarea class="form-control" id="periodDescription" rows="2" placeholder="Descripción del período"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-plus-circle"></i> Agregar Período
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Períodos Registrados</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="periodsList">
+                                        <!-- Lista de periodos cargada dinamicamente -->
                                     </div>
                                 </div>
                             </div>
