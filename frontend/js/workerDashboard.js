@@ -1,13 +1,11 @@
 // Script para el panel de trabajador
 const API_BASE_URL = 'http://localhost:3000/api';
-let currentUserId = '507f1f77bcf86cd799439012';
-let activityCount = 1;
+let currentUserId = '';
 
-document.addEventListener('DOMContentLoaded', function() {
-    checkAuthAndRole('worker');
+document.addEventListener('DOMContentLoaded', async function() {
+    await checkAuthAndRole('worker');
     initializeDashboard();
     setupEventListeners();
-    loadProjects();
     initThemeToggle();
 });
 
@@ -43,56 +41,35 @@ function updateThemeIcon(theme, icon) {
     }
 }
 
-function checkAuthAndRole(requiredRole) {
+async function checkAuthAndRole(requiredRole) {
     const currentUser = localStorage.getItem('currentUser');
     if (!currentUser) {
-        console.error('401 Unauthorized: No hay sesion activa');
-        showUnauthorizedError();
-        setTimeout(() => window.location.href = 'index.html', 2000);
+        window.location.href = 'index.html';
         return;
     }
     const user = JSON.parse(currentUser);
     if (user.role !== requiredRole) {
-        console.error(`403 Forbidden: Usuario con rol '${user.role}' intento acceder a dashboard '${requiredRole}'`);
-        showForbiddenError();
-        setTimeout(() => window.location.href = 'index.html', 2000);
+        window.location.href = 'index.html';
         return;
     }
+    await fetchCurrentUserId(user.email);
     document.getElementById('userName').textContent = user.name;
 }
 
-function showUnauthorizedError() {
-    document.body.innerHTML = `
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="alert alert-danger text-center" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill" style="font-size: 3rem;"></i>
-                        <h4 class="mt-3">401 - No Autorizado</h4>
-                        <p>Debe iniciar sesion para acceder a esta pagina.</p>
-                        <p class="mb-0">Redirigiendo al inicio...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function showForbiddenError() {
-    document.body.innerHTML = `
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="alert alert-warning text-center" role="alert">
-                        <i class="bi bi-shield-exclamation" style="font-size: 3rem;"></i>
-                        <h4 class="mt-3">403 - Acceso Denegado</h4>
-                        <p>No tiene permisos para acceder a esta pagina.</p>
-                        <p class="mb-0">Redirigiendo al inicio...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
+async function fetchCurrentUserId(email) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/users`);
+        const users = await response.json();
+        const currentUser = users.find(u => u.userEmail === email);
+        if (currentUser) {
+            currentUserId = currentUser._id;
+            console.log('Usuario ID obtenido:', currentUserId);
+        } else {
+            console.error('No se encontro usuario con email:', email);
+        }
+    } catch (error) {
+        console.error('Error obteniendo ID de usuario:', error);
+    }
 }
 
 function logout() {
@@ -100,9 +77,7 @@ function logout() {
     window.location.href = 'index.html';
 }
 
-// Configurar event listeners
 function setupEventListeners() {
-    // Navegacion entre secciones
     document.querySelectorAll('[data-section]').forEach(button => {
         button.addEventListener('click', function() {
             showSection(this.dataset.section);
@@ -110,37 +85,35 @@ function setupEventListeners() {
         });
     });
 
-    // Formularios
-    document.getElementById('dailyReportForm').addEventListener('submit', handleReportSubmit);
-    document.getElementById('vacationRequestForm').addEventListener('submit', handleVacationSubmit);
-    
-    // Calcular dias de vacaciones automaticamente
-    document.getElementById('vacationStartDate').addEventListener('change', calculateVacationDays);
-    document.getElementById('vacationEndDate').addEventListener('change', calculateVacationDays);
+    document.getElementById('vacationRequestForm').addEventListener('submit', handleVacationRequest);
+    document.getElementById('dailyReportForm').addEventListener('submit', handleDailyReportSubmit);
 }
 
-// Mostrar seccion especifica
 function showSection(sectionId) {
     document.querySelectorAll('.content-section').forEach(section => {
         section.classList.add('d-none');
     });
     document.getElementById(sectionId).classList.remove('d-none');
     
-    // Cargar datos segun la seccion
     switch(sectionId) {
-        case 'my-reports':
-            loadMyReports();
-            break;
-        case 'my-vacations':
-            loadMyVacations();
+        case 'daily-report':
+            loadAssignedProjects();
             break;
         case 'vacation-request':
             loadHolidaysCalendar();
             break;
+        case 'my-vacations':
+            loadMyVacations();
+            break;
+        case 'my-reports':
+            loadMyReports();
+            break;
+        case 'vacation-periods':
+            loadVacationPeriods();
+            break;
     }
 }
 
-// Actualizar boton activo
 function updateActiveButton(activeButton) {
     document.querySelectorAll('.list-group-item').forEach(btn => {
         btn.classList.remove('active');
@@ -148,113 +121,307 @@ function updateActiveButton(activeButton) {
     activeButton.classList.add('active');
 }
 
-// Cargar proyectos disponibles
-async function loadProjects() {
+// Solicitar vacaciones
+async function handleVacationRequest(e) {
+    e.preventDefault();
+    
+    if (!currentUserId) {
+        showError('Error: No se pudo obtener el ID del usuario. Intente recargar la pagina.');
+        return;
+    }
+    
+    const startDate = document.getElementById('vacationStartDate').value;
+    const endDate = document.getElementById('vacationEndDate').value;
+    const reason = document.getElementById('vacationReason').value;
+    
+    if (!startDate || !endDate || !reason) {
+        showError('Todos los campos son requeridos');
+        return;
+    }
+    
+    if (new Date(endDate) < new Date(startDate)) {
+        showError('La fecha de fin no puede ser anterior a la fecha de inicio');
+        return;
+    }
+    
+    const isBlocked = await checkVacationPeriodConflict(startDate, endDate);
+    if (isBlocked) {
+        return;
+    }
+    
+    const vacationData = {
+        vacationUser: currentUserId,
+        vacationStartDate: startDate,
+        vacationEndDate: endDate,
+        vacationReason: reason,
+        vacationDays: 1
+    };
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/vacations`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(vacationData)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            showSuccess('Solicitud de vacaciones enviada correctamente');
+            e.target.reset();
+        } else {
+            showError(result.message || result.error || 'Error enviando solicitud');
+        }
+    } catch (error) {
+        console.error('Error completo:', error);
+        showError('Error conectando con el servidor');
+    }
+}
+
+// Verificar si las fechas caen en periodo bloqueado
+async function checkVacationPeriodConflict(startDate, endDate) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/vacation-periods`);
+        const result = await response.json();
+        
+        if (!result.success || !result.periods || result.periods.length === 0) {
+            return false;
+        }
+        
+        const start = new Date(startDate + 'T00:00:00');
+        const end = new Date(endDate + 'T00:00:00');
+        
+        for (const period of result.periods) {
+            const periodStart = new Date(period.periodStartDate);
+            const periodEnd = new Date(period.periodEndDate);
+            periodStart.setHours(0, 0, 0, 0);
+            periodEnd.setHours(0, 0, 0, 0);
+            
+            if (start <= periodEnd && end >= periodStart) {
+                showError(`No se pueden solicitar vacaciones durante el periodo bloqueado: ${period.periodName} (${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)})`);
+                return true;
+            }
+        }
+        return false;
+    } catch (error) {
+        console.error('Error verificando periodos:', error);
+        return false;
+    }
+}
+
+// Cargar feriados en calendario
+async function loadHolidaysCalendar() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/holidays`);
+        const result = await response.json();
+        
+        if (result.success) {
+            displayHolidaysCalendar(result.holidays);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function displayHolidaysCalendar(holidays) {
+    const container = document.getElementById('holidaysCalendar');
+    
+    if (holidays.length === 0) {
+        container.innerHTML = '<p class="text-muted">No hay feriados registrados</p>';
+        return;
+    }
+    
+    container.innerHTML = holidays.map(holiday => `
+        <div class="mb-2 p-2 border-start border-primary border-3">
+            <strong>${holiday.holidayName}</strong><br>
+            <small class="text-muted">${formatDate(holiday.holidayDate)}</small>
+        </div>
+    `).join('');
+}
+
+// Cargar mis vacaciones
+async function loadMyVacations() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/vacations/user/${currentUserId}`);
+        const vacations = await response.json();
+        displayMyVacations(vacations);
+    } catch (error) {
+        console.error('Error:', error);
+        showError('Error cargando vacaciones');
+    }
+}
+
+function displayMyVacations(vacations) {
+    const tbody = document.getElementById('myVacationsTable');
+    
+    if (vacations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No tiene solicitudes de vacaciones</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = vacations.map(vacation => {
+        let statusBadge = '';
+        if (vacation.vacationStatus === 'pending') {
+            statusBadge = '<span class="badge bg-warning">Pendiente</span>';
+        } else if (vacation.vacationStatus === 'approved') {
+            statusBadge = '<span class="badge bg-success">Aprobada</span>';
+        } else {
+            statusBadge = '<span class="badge bg-danger">Rechazada</span>';
+        }
+        
+        return `
+            <tr>
+                <td>${formatDate(vacation.createdAt)}</td>
+                <td>${formatDate(vacation.vacationStartDate)}</td>
+                <td>${formatDate(vacation.vacationEndDate)}</td>
+                <td>${vacation.vacationDays}</td>
+                <td>${statusBadge}</td>
+                <td>${vacation.vacationComments || '-'}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function initializeDashboard() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('reportDate').value = today;
+    loadAssignedProjects();
+}
+
+// Cargar proyectos asignados al trabajador
+async function loadAssignedProjects() {
+    if (!currentUserId) {
+        return;
+    }
+    
     try {
         const response = await fetch(`${API_BASE_URL}/projects`);
         const projects = await response.json();
-        populateProjectSelects(projects);
+        
+        const assignedProjects = projects.filter(project => 
+            project.projectAssignedUsers && 
+            project.projectAssignedUsers.some(user => user._id === currentUserId)
+        );
+        
+        populateProjectSelects(assignedProjects);
     } catch (error) {
         console.error('Error cargando proyectos:', error);
-        showError('Error cargando proyectos');
     }
 }
 
-// Poblar selects de proyectos
 function populateProjectSelects(projects) {
     const selects = document.querySelectorAll('[id^="activityProject"]');
     
+    const options = projects.length > 0 
+        ? projects.map(p => `<option value="${p._id}">${p.projectName}</option>`).join('')
+        : '<option value="">No hay proyectos asignados</option>';
+    
     selects.forEach(select => {
-        select.innerHTML = '<option value="">Seleccionar proyecto</option>' +
-            projects.map(project => 
-                `<option value="${project._id}">${project.projectName}</option>`
-            ).join('');
+        const currentValue = select.value;
+        select.innerHTML = '<option value="">Seleccionar proyecto</option>' + options;
+        if (currentValue) select.value = currentValue;
     });
 }
 
-// Agregar nueva actividad
+let activityCount = 1;
+
 function addActivity() {
     const container = document.getElementById('activitiesContainer');
-    const activityHtml = `
-        <div class="activity-item border p-3 mb-3">
-            <button type="button" class="btn-remove-activity" onclick="removeActivity(this)">×</button>
-            <h5>Actividad ${activityCount + 1}</h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="activityProject${activityCount}" class="form-label">Proyecto</label>
-                    <select class="form-select" id="activityProject${activityCount}" required>
-                        <option value="">Seleccionar proyecto</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="activityHours${activityCount}" class="form-label">Horas Dedicadas</label>
-                    <input type="number" class="form-control" id="activityHours${activityCount}" min="0.5" max="24" step="0.5" required>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="activityDescription${activityCount}" class="form-label">Descripcion de Actividad</label>
-                <textarea class="form-control" id="activityDescription${activityCount}" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="activityStatus${activityCount}" class="form-label">Estado</label>
-                <select class="form-select" id="activityStatus${activityCount}" required>
-                    <option value="">Seleccionar estado</option>
-                    <option value="completed">Completada</option>
-                    <option value="in-progress">En Progreso</option>
-                    <option value="blocked">Bloqueada</option>
-                </select>
-            </div>
-        </div>
-    `;
-    
-    container.insertAdjacentHTML('beforeend', activityHtml);
     activityCount++;
     
-    // Cargar proyectos en el nuevo select
-    loadProjects();
+    const activityDiv = document.createElement('div');
+    activityDiv.className = 'activity-item border p-3 mb-3';
+    activityDiv.innerHTML = `
+        <h5>Actividad ${activityCount}</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="activityProject${activityCount - 1}" class="form-label text-dark fw-semibold">
+                    <i class="bi bi-folder"></i> Proyecto
+                </label>
+                <select class="form-select" id="activityProject${activityCount - 1}" required>
+                    <option value="">Seleccionar proyecto</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="activityHours${activityCount - 1}" class="form-label text-dark fw-semibold">
+                    <i class="bi bi-clock"></i> Horas Dedicadas
+                </label>
+                <input type="number" class="form-control" id="activityHours${activityCount - 1}" min="0.5" max="24" step="0.5" placeholder="Ej: 4.5" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="activityDescription${activityCount - 1}" class="form-label text-dark fw-semibold">
+                <i class="bi bi-file-text"></i> Descripción de Actividad
+            </label>
+            <textarea class="form-control" id="activityDescription${activityCount - 1}" rows="3" placeholder="Describa las tareas realizadas" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="activityStatus${activityCount - 1}" class="form-label text-dark fw-semibold">
+                <i class="bi bi-flag"></i> Estado
+            </label>
+            <select class="form-select" id="activityStatus${activityCount - 1}" required>
+                <option value="">Seleccionar estado</option>
+                <option value="completed">Completada</option>
+                <option value="in-progress">En Progreso</option>
+                <option value="blocked">Bloqueada</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-sm btn-danger" onclick="removeActivity(this)">
+            <i class="bi bi-trash"></i> Eliminar Actividad
+        </button>
+    `;
+    
+    container.appendChild(activityDiv);
+    loadAssignedProjects();
 }
 
-// Remover actividad
 function removeActivity(button) {
-    if (document.querySelectorAll('.activity-item').length > 1) {
-        button.closest('.activity-item').remove();
-    } else {
-        showError('Debe mantener al menos una actividad');
-    }
+    button.closest('.activity-item').remove();
 }
 
-// Manejar envio de reporte diario
-async function handleReportSubmit(e) {
+// Guardar reporte diario
+async function handleDailyReportSubmit(e) {
     e.preventDefault();
+    
+    if (!currentUserId) {
+        showError('Error: No se pudo obtener el ID del usuario');
+        return;
+    }
     
     const reportDate = document.getElementById('reportDate').value;
     const activities = [];
     
-    // Recopilar datos de todas las actividades
-    document.querySelectorAll('.activity-item').forEach((item, index) => {
-        const projectSelect = item.querySelector(`[id^="activityProject"]`);
-        const hoursInput = item.querySelector(`[id^="activityHours"]`);
-        const descriptionTextarea = item.querySelector(`[id^="activityDescription"]`);
-        const statusSelect = item.querySelector(`[id^="activityStatus"]`);
+    const activityItems = document.querySelectorAll('.activity-item');
+    
+    for (let i = 0; i < activityItems.length; i++) {
+        const project = document.getElementById(`activityProject${i}`).value;
+        const hours = document.getElementById(`activityHours${i}`).value;
+        const description = document.getElementById(`activityDescription${i}`).value;
+        const status = document.getElementById(`activityStatus${i}`).value;
         
-        if (projectSelect.value && hoursInput.value && descriptionTextarea.value && statusSelect.value) {
-            activities.push({
-                activityProject: projectSelect.value,
-                activityHours: parseFloat(hoursInput.value),
-                activityDescription: descriptionTextarea.value,
-                activityStatus: statusSelect.value
-            });
+        if (!project || !hours || !description || !status) {
+            showError('Complete todos los campos de las actividades');
+            return;
         }
-    });
+        
+        activities.push({
+            activityProject: project,
+            activityHours: parseFloat(hours),
+            activityDescription: description,
+            activityStatus: status
+        });
+    }
     
     if (activities.length === 0) {
-        showError('Debe completar al menos una actividad');
+        showError('Debe agregar al menos una actividad');
         return;
     }
     
     const reportData = {
-        reportDate: reportDate,
         reportUser: currentUserId,
+        reportDate: reportDate,
         reportActivities: activities
     };
     
@@ -270,215 +437,101 @@ async function handleReportSubmit(e) {
         if (response.ok) {
             showSuccess('Reporte guardado correctamente');
             e.target.reset();
-            resetActivities();
+            document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('activitiesContainer').innerHTML = `
+                <div class="activity-item border p-3 mb-3">
+                    <h5>Actividad 1</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="activityProject0" class="form-label text-dark fw-semibold">
+                                <i class="bi bi-folder"></i> Proyecto
+                            </label>
+                            <select class="form-select" id="activityProject0" required>
+                                <option value="">Seleccionar proyecto</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="activityHours0" class="form-label text-dark fw-semibold">
+                                <i class="bi bi-clock"></i> Horas Dedicadas
+                            </label>
+                            <input type="number" class="form-control" id="activityHours0" min="0.5" max="24" step="0.5" placeholder="Ej: 4.5" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="activityDescription0" class="form-label text-dark fw-semibold">
+                            <i class="bi bi-file-text"></i> Descripción de Actividad
+                        </label>
+                        <textarea class="form-control" id="activityDescription0" rows="3" placeholder="Describa las tareas realizadas" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="activityStatus0" class="form-label text-dark fw-semibold">
+                            <i class="bi bi-flag"></i> Estado
+                        </label>
+                        <select class="form-select" id="activityStatus0" required>
+                            <option value="">Seleccionar estado</option>
+                            <option value="completed">Completada</option>
+                            <option value="in-progress">En Progreso</option>
+                            <option value="blocked">Bloqueada</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            activityCount = 1;
+            loadAssignedProjects();
         } else {
-            throw new Error('Error guardando reporte');
+            const error = await response.json();
+            showError(error.message || 'Error guardando reporte');
         }
     } catch (error) {
         console.error('Error:', error);
-        showError('Error guardando reporte');
-    }
-}
-
-// Resetear actividades a estado inicial
-function resetActivities() {
-    const container = document.getElementById('activitiesContainer');
-    container.innerHTML = `
-        <div class="activity-item border p-3 mb-3">
-            <h5>Actividad 1</h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="activityProject0" class="form-label">Proyecto</label>
-                    <select class="form-select" id="activityProject0" required>
-                        <option value="">Seleccionar proyecto</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="activityHours0" class="form-label">Horas Dedicadas</label>
-                    <input type="number" class="form-control" id="activityHours0" min="0.5" max="24" step="0.5" required>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="activityDescription0" class="form-label">Descripcion de Actividad</label>
-                <textarea class="form-control" id="activityDescription0" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="activityStatus0" class="form-label">Estado</label>
-                <select class="form-select" id="activityStatus0" required>
-                    <option value="">Seleccionar estado</option>
-                    <option value="completed">Completada</option>
-                    <option value="in-progress">En Progreso</option>
-                    <option value="blocked">Bloqueada</option>
-                </select>
-            </div>
-        </div>
-    `;
-    activityCount = 1;
-    loadProjects();
-}
-
-// Manejar solicitud de vacaciones
-async function handleVacationSubmit(e) {
-    e.preventDefault();
-    
-    const vacationData = {
-        vacationUser: currentUserId,
-        vacationStartDate: document.getElementById('vacationStartDate').value,
-        vacationEndDate: document.getElementById('vacationEndDate').value,
-        vacationReason: document.getElementById('vacationReason').value
-    };
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/vacations`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(vacationData)
-        });
-        
-        if (response.ok) {
-            showSuccess('Solicitud de vacaciones enviada correctamente');
-            e.target.reset();
-        } else {
-            throw new Error('Error enviando solicitud');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showError('Error enviando solicitud de vacaciones');
-    }
-}
-
-// Calcular dias de vacaciones
-function calculateVacationDays() {
-    const startDate = document.getElementById('vacationStartDate').value;
-    const endDate = document.getElementById('vacationEndDate').value;
-    
-    if (startDate && endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        const timeDiff = end.getTime() - start.getTime();
-        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
-        
-        if (daysDiff > 0) {
-            // Mostrar dias calculados (se podria agregar un elemento para mostrar esto)
-            console.log(`Dias de vacaciones: ${daysDiff}`);
-        }
+        showError('Error conectando con el servidor');
     }
 }
 
 // Cargar mis reportes
 async function loadMyReports() {
+    if (!currentUserId) {
+        return;
+    }
+    
     try {
         const response = await fetch(`${API_BASE_URL}/reports/user/${currentUserId}`);
         const reports = await response.json();
         displayMyReports(reports);
     } catch (error) {
-        console.error('Error cargando reportes:', error);
+        console.error('Error:', error);
         showError('Error cargando reportes');
     }
 }
 
-// Mostrar mis reportes
 function displayMyReports(reports) {
     const tbody = document.getElementById('myReportsTable');
     
     if (reports.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay reportes registrados</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center">No tiene reportes registrados</td></tr>';
         return;
     }
     
     tbody.innerHTML = reports.map(report => `
         <tr>
             <td>${formatDate(report.reportDate)}</td>
-            <td>${report.reportTotalHours}h</td>
-            <td>${report.reportActivities.length} actividades</td>
+            <td><strong>${report.reportTotalHours}h</strong></td>
+            <td>${report.reportActivities.length}</td>
             <td>
-                <button class="btn btn-sm btn-outline-primary" onclick="viewReportDetails('${report._id}')">
-                    Ver Detalles
+                <button class="btn btn-sm btn-info" onclick="viewReportDetails('${report._id}')">
+                    <i class="bi bi-eye"></i> Ver
                 </button>
             </td>
         </tr>
     `).join('');
 }
 
-// Cargar mis vacaciones
-async function loadMyVacations() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/vacations/user/${currentUserId}`);
-        const vacations = await response.json();
-        displayMyVacations(vacations);
-    } catch (error) {
-        console.error('Error cargando vacaciones:', error);
-        showError('Error cargando vacaciones');
-    }
-}
-
-// Mostrar mis vacaciones
-function displayMyVacations(vacations) {
-    const tbody = document.getElementById('myVacationsTable');
-    
-    if (vacations.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No hay solicitudes de vacaciones</td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = vacations.map(vacation => `
-        <tr>
-            <td>${formatDate(vacation.createdAt)}</td>
-            <td>${formatDate(vacation.vacationStartDate)}</td>
-            <td>${formatDate(vacation.vacationEndDate)}</td>
-            <td>${vacation.vacationDays}</td>
-            <td><span class="badge status-${vacation.vacationStatus}">${getStatusText(vacation.vacationStatus)}</span></td>
-            <td>${vacation.vacationComments || '-'}</td>
-        </tr>
-    `).join('');
-}
-
-// Cargar calendario de feriados
-function loadHolidaysCalendar() {
-    // Datos de ejemplo, reemplazar con llamada a API
-    const holidays = [
-        { name: 'Año Nuevo', date: '2024-01-01' },
-        { name: 'Dia del Trabajador', date: '2024-05-01' },
-        { name: 'Independencia', date: '2024-09-15' }
-    ];
-    
-    const container = document.getElementById('holidaysCalendar');
-    container.innerHTML = holidays.map(holiday => `
-        <div class="holiday-item">
-            <strong>${holiday.name}</strong><br>
-            <small class="text-muted">${formatDate(holiday.date)}</small>
-        </div>
-    `).join('');
-}
-
 function viewReportDetails(reportId) {
-    console.log('Ver detalles del reporte:', reportId);
+    showError('Funcionalidad de ver detalles en desarrollo');
 }
 
-// Inicializar dashboard
-function initializeDashboard() {
-    // Establecer fecha actual por defecto
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('reportDate').value = today;
-}
-
-// Funciones de utilidad
 function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString('es-ES');
-}
-
-function getStatusText(status) {
-    const statusMap = {
-        'pending': 'Pendiente',
-        'approved': 'Aprobada',
-        'rejected': 'Rechazada',
-        'completed': 'Completada',
-        'in-progress': 'En Progreso',
-        'blocked': 'Bloqueada'
-    };
-    return statusMap[status] || status;
 }
 
 function showSuccess(message) {
@@ -502,4 +555,45 @@ function showAlert(message, type) {
     setTimeout(() => {
         alertDiv.remove();
     }, 5000);
+}
+
+// Cargar periodos de vacaciones
+async function loadVacationPeriods() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/vacation-periods`);
+        const result = await response.json();
+        
+        if (result.success) {
+            displayVacationPeriods(result.periods);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showError('Error cargando periodos');
+    }
+}
+
+function displayVacationPeriods(periods) {
+    const container = document.getElementById('periodsList');
+    
+    if (periods.length === 0) {
+        container.innerHTML = '<p class="text-muted">No hay periodos bloqueados</p>';
+        return;
+    }
+    
+    container.innerHTML = periods.map(period => {
+        const startDate = new Date(period.periodStartDate);
+        const endDate = new Date(period.periodEndDate);
+        const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        
+        return `
+            <div class="alert alert-warning mb-3">
+                <h4 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> ${period.periodName}</h4>
+                <p class="mb-1">
+                    <strong>Periodo:</strong> ${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)}
+                    <span class="badge bg-secondary ms-2">${duration} días</span>
+                </p>
+                ${period.periodDescription ? `<p class="mb-0"><small>${period.periodDescription}</small></p>` : ''}
+            </div>
+        `;
+    }).join('');
 }
