@@ -142,26 +142,23 @@ function formatDate(dateString) {
 }
 
 function showSuccess(message) {
-    showAlert(message, 'success');
+    Swal.fire({
+        title: 'Exitoso',
+        text: message,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#198754'
+    });
 }
 
 function showError(message) {
-    showAlert(message, 'danger');
-}
-
-function showAlert(message, type) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    document.querySelector('.container-fluid').prepend(alertDiv);
-    
-    setTimeout(() => {
-        alertDiv.remove();
-    }, 5000);
+    Swal.fire({
+        title: 'Error',
+        text: message,
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#dc3545'
+    });
 }
 
 // Cargar periodos de vacaciones
@@ -536,7 +533,18 @@ async function unassignUserFromProject(projectId, userId) {
 
 // Eliminar proyecto
 async function deleteProject(projectId) {
-    if (!confirm('¿Esta seguro de eliminar este proyecto?')) {
+    const result = await Swal.fire({
+        title: '¿Está seguro?',
+        text: 'Se eliminará este proyecto',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d'
+    });
+    
+    if (!result.isConfirmed) {
         return;
     }
     

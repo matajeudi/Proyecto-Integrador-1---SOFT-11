@@ -100,8 +100,14 @@ const CalendarView = {
       const dayEvents = this.getEventsForDate(events, selectedDate);
       
       if (dayEvents.length > 0) {
-        const eventTitles = dayEvents.map(ev => ev.title).join(', ');
-        alert(`Eventos en esta fecha: ${eventTitles}`);
+        const eventList = dayEvents.map(ev => `• ${ev.title}`).join('<br>');
+        Swal.fire({
+          title: 'Eventos en esta fecha',
+          html: eventList,
+          icon: 'info',
+          confirmButtonText: 'Entendido',
+          confirmButtonColor: '#4a6fa5'
+        });
       }
     });
   },
