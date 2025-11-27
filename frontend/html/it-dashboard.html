@@ -13,14 +13,14 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-info">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Rikimaka</a>
+            <a class="navbar-brand" href="#"><i class="bi bi-building" aria-hidden="true"></i> Rikimaka</a>
             <div class="navbar-nav ms-auto">
-                <span class="navbar-text me-3"><i class="bi bi-person-circle"></i> <span id="userName"></span></span>
+                <span class="navbar-text me-3"><i class="bi bi-person-circle" aria-hidden="true"></i> <span id="userName"></span></span>
                 <button class="btn btn-outline-light btn-sm me-2" id="themeToggle" aria-label="Cambiar tema">
                     <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
                 </button>
                 <button class="btn btn-outline-light btn-sm" onclick="logout()">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i> Cerrar Sesión
                 </button>
             </div>
         </div>
@@ -136,7 +136,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%);">
-                    <h2 class="modal-title h5 text-white fw-bold"><i class="bi bi-folder-plus"></i> Crear Nuevo Proyecto</h2>
+                    <h2 class="modal-title h5 text-white fw-bold"><i class="bi bi-folder-plus" aria-hidden="true"></i> Crear Nuevo Proyecto</h2>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body" style="background-color: #ffffff;">
@@ -145,33 +145,33 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="projectName" class="form-label text-dark fw-semibold">
-                                    <i class="bi bi-briefcase"></i> Nombre del Proyecto
+                                    <i class="bi bi-briefcase" aria-hidden="true"></i> Nombre del Proyecto
                                 </label>
                                 <input type="text" class="form-control" id="projectName" placeholder="Ej: Sistema de Gestión" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="projectBudget" class="form-label text-dark fw-semibold">
-                                    <i class="bi bi-currency-dollar"></i> Presupuesto
+                                    <i class="bi bi-currency-dollar" aria-hidden="true"></i> Presupuesto
                                 </label>
                                 <input type="number" class="form-control" id="projectBudget" min="0" placeholder="Ej: 50000" required>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="projectDescription" class="form-label text-dark fw-semibold">
-                                <i class="bi bi-file-text"></i> Descripción
+                                <i class="bi bi-file-text" aria-hidden="true"></i> Descripción
                             </label>
                             <textarea class="form-control" id="projectDescription" rows="3" placeholder="Describa los objetivos y alcance del proyecto" required></textarea>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="projectStartDate" class="form-label text-dark fw-semibold">
-                                    <i class="bi bi-calendar-check"></i> Fecha de Inicio
+                                    <i class="bi bi-calendar-check" aria-hidden="true"></i> Fecha de Inicio
                                 </label>
                                 <input type="date" class="form-control" id="projectStartDate" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="projectEndDate" class="form-label text-dark fw-semibold">
-                                    <i class="bi bi-calendar-x"></i> Fecha de Fin
+                                    <i class="bi bi-calendar-x" aria-hidden="true"></i> Fecha de Fin
                                 </label>
                                 <input type="date" class="form-control" id="projectEndDate" required>
                             </div>
@@ -190,7 +190,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="projectStatus" class="form-label text-dark fw-semibold">
-                                <i class="bi bi-flag"></i> Estado
+                                <i class="bi bi-flag" aria-hidden="true"></i> Estado
                             </label>
                             <select class="form-select" id="projectStatus" required>
                                 <option value="planning">Planificación</option>

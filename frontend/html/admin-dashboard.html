@@ -13,14 +13,14 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Rikimaka</a>
+            <a class="navbar-brand" href="#"><i class="bi bi-building" aria-hidden="true"></i> Rikimaka</a>
             <div class="navbar-nav ms-auto">
-                <span class="navbar-text me-3"><i class="bi bi-person-circle"></i> <span id="userName"></span></span>
+                <span class="navbar-text me-3"><i class="bi bi-person-circle" aria-hidden="true"></i> <span id="userName"></span></span>
                 <button class="btn btn-outline-light btn-sm me-2" id="themeToggle" aria-label="Cambiar tema">
                     <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
                 </button>
                 <button class="btn btn-outline-light btn-sm" onclick="logout()">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i> Cerrar Sesión
                 </button>
             </div>
         </div>
@@ -124,30 +124,30 @@
                                     <form id="periodForm">
                                         <div class="mb-3">
                                             <label for="periodName" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-calendar-range"></i> Nombre del Período
+                                                <i class="bi bi-calendar-range" aria-hidden="true"></i> Nombre del Período
                                             </label>
                                             <input type="text" class="form-control" id="periodName" placeholder="Ej: Vacaciones 2025" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="periodStartDate" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-calendar-check"></i> Fecha Inicio
+                                                <i class="bi bi-calendar-check" aria-hidden="true"></i> Fecha Inicio
                                             </label>
                                             <input type="date" class="form-control" id="periodStartDate" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="periodEndDate" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-calendar-x"></i> Fecha Fin
+                                                <i class="bi bi-calendar-x" aria-hidden="true"></i> Fecha Fin
                                             </label>
                                             <input type="date" class="form-control" id="periodEndDate" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="periodDescription" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-card-text"></i> Descripción (Opcional)
+                                                <i class="bi bi-card-text" aria-hidden="true"></i> Descripción (Opcional)
                                             </label>
                                             <textarea class="form-control" id="periodDescription" rows="2" placeholder="Descripción del período"></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="bi bi-plus-circle"></i> Agregar Período
+                                            <i class="bi bi-plus-circle" aria-hidden="true"></i> Agregar Período
                                         </button>
                                     </form>
                                 </div>
@@ -181,18 +181,18 @@
                                     <form id="holidayForm">
                                         <div class="mb-3">
                                             <label for="holidayName" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-calendar-event"></i> Nombre del Feriado
+                                                <i class="bi bi-calendar-event" aria-hidden="true"></i> Nombre del Feriado
                                             </label>
                                             <input type="text" class="form-control" id="holidayName" placeholder="Ej: Día de la Independencia" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="holidayDate" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-calendar3"></i> Fecha
+                                                <i class="bi bi-calendar3" aria-hidden="true"></i> Fecha
                                             </label>
                                             <input type="date" class="form-control" id="holidayDate" required>
                                         </div>
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="bi bi-plus-circle"></i> Agregar Feriado
+                                            <i class="bi bi-plus-circle" aria-hidden="true"></i> Agregar Feriado
                                         </button>
                                     </form>
                                 </div>
@@ -221,7 +221,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
-                    <h2 class="modal-title h5 text-white fw-bold"><i class="bi bi-clipboard-check"></i> Procesar Solicitud</h2>
+                    <h2 class="modal-title h5 text-white fw-bold"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Procesar Solicitud</h2>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body" style="background-color: #ffffff;">
@@ -229,7 +229,7 @@
                         <input type="hidden" id="vacationId">
                         <div class="mb-3">
                             <label for="vacationComments" class="form-label text-dark fw-semibold">
-                                <i class="bi bi-chat-left-text-fill"></i> Comentarios
+                                <i class="bi bi-chat-left-text-fill" aria-hidden="true"></i> Comentarios
                             </label>
                             <textarea class="form-control" id="vacationComments" rows="3" placeholder="Ingrese comentarios sobre la solicitud (opcional)"></textarea>
                         </div>
