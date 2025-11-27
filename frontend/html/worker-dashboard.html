@@ -13,14 +13,14 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Rikimaka</a>
+            <a class="navbar-brand" href="#"><i class="bi bi-building" aria-hidden="true"></i> Rikimaka</a>
             <div class="navbar-nav ms-auto">
-                <span class="navbar-text me-3"><i class="bi bi-person-circle"></i> <span id="userName"></span></span>
+                <span class="navbar-text me-3"><i class="bi bi-person-circle" aria-hidden="true"></i> <span id="userName"></span></span>
                 <button class="btn btn-outline-light btn-sm me-2" id="themeToggle" aria-label="Cambiar tema">
                     <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
                 </button>
                 <button class="btn btn-outline-light btn-sm" onclick="logout()">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i> Cerrar Sesión
                 </button>
             </div>
         </div>
@@ -52,7 +52,7 @@
                     <form id="dailyReportForm">
                         <div class="mb-3">
                             <label for="reportDate" class="form-label text-dark fw-semibold">
-                                <i class="bi bi-calendar-day"></i> Fecha
+                                <i class="bi bi-calendar-day" aria-hidden="true"></i> Fecha
                             </label>
                             <input type="date" class="form-control" id="reportDate" required>
                         </div>
@@ -63,7 +63,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="activityProject0" class="form-label text-dark fw-semibold">
-                                            <i class="bi bi-folder"></i> Proyecto
+                                            <i class="bi bi-folder" aria-hidden="true"></i> Proyecto
                                         </label>
                                         <select class="form-select" id="activityProject0" required>
                                             <option value="">Seleccionar proyecto</option>
@@ -72,20 +72,20 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="activityHours0" class="form-label text-dark fw-semibold">
-                                            <i class="bi bi-clock"></i> Horas Dedicadas
+                                            <i class="bi bi-clock" aria-hidden="true"></i> Horas Dedicadas
                                         </label>
                                         <input type="number" class="form-control" id="activityHours0" min="0.5" max="24" step="0.5" placeholder="Ej: 4.5" required>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="activityDescription0" class="form-label text-dark fw-semibold">
-                                        <i class="bi bi-file-text"></i> Descripción de Actividad
+                                        <i class="bi bi-file-text" aria-hidden="true"></i> Descripción de Actividad
                                     </label>
                                     <textarea class="form-control" id="activityDescription0" rows="3" placeholder="Describa las tareas realizadas" required></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="activityStatus0" class="form-label text-dark fw-semibold">
-                                        <i class="bi bi-flag"></i> Estado
+                                        <i class="bi bi-flag" aria-hidden="true"></i> Estado
                                     </label>
                                     <select class="form-select" id="activityStatus0" required>
                                         <option value="">Seleccionar estado</option>
@@ -135,20 +135,20 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label for="vacationStartDate" class="form-label text-dark fw-semibold">
-                                                    <i class="bi bi-calendar-check"></i> Fecha de Inicio
+                                                    <i class="bi bi-calendar-check" aria-hidden="true"></i> Fecha de Inicio
                                                 </label>
                                                 <input type="date" class="form-control" id="vacationStartDate" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="vacationEndDate" class="form-label text-dark fw-semibold">
-                                                    <i class="bi bi-calendar-x"></i> Fecha de Fin
+                                                    <i class="bi bi-calendar-x" aria-hidden="true"></i> Fecha de Fin
                                                 </label>
                                                 <input type="date" class="form-control" id="vacationEndDate" required>
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="vacationReason" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-chat-left-quote"></i> Razón de la Solicitud
+                                                <i class="bi bi-chat-left-quote" aria-hidden="true"></i> Razón de la Solicitud
                                             </label>
                                             <textarea class="form-control" id="vacationReason" rows="3" placeholder="Describa el motivo de su solicitud de vacaciones" required></textarea>
                                         </div>
