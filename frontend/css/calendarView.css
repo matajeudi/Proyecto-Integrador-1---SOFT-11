@@ -1,0 +1,123 @@
+/* Estilos para el calendario visual */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.7rem;
+  padding: 0.35rem;
+  background: #f8f9fa;
+  border-radius: 0.25rem;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 0.7rem;
+  margin-bottom: 0.7rem;
+  padding: 0.35rem;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  background: #dee2e6;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.calendar-day-header {
+  background: #6c757d;
+  color: white;
+  padding: 0.35rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.calendar-day {
+  background: white;
+  min-height: 56px;
+  padding: 0.35rem;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.calendar-day:hover {
+  background: #f8f9fa;
+}
+
+.calendar-day.empty {
+  background: #f8f9fa;
+  cursor: default;
+}
+
+.calendar-day.today {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+}
+
+.day-number {
+  font-weight: 600;
+  font-size: 0.7rem;
+  margin-bottom: 0.2rem;
+}
+
+.day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 0.2rem;
+}
+
+.event-badge {
+  font-size: 0.6rem;
+  padding: 1px 3px;
+  border-radius: 2px;
+  color: white;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: help;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .calendar-day {
+    min-height: 42px;
+    padding: 0.2rem;
+  }
+  
+  .day-number {
+    font-size: 0.65rem;
+  }
+  
+  .calendar-legend {
+    font-size: 0.65rem;
+  }
+  
+  .event-badge {
+    font-size: 0.55rem;
+    padding: 1px 2px;
+  }
+}

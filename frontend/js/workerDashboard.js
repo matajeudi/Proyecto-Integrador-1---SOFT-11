@@ -211,34 +211,14 @@ async function checkVacationPeriodConflict(startDate, endDate) {
     }
 }
 
-// Cargar feriados en calendario
+// Carga y renderiza calendario visual con todos los eventos
 async function loadHolidaysCalendar() {
     try {
-        const response = await fetch(`${API_BASE_URL}/holidays`);
-        const result = await response.json();
-        
-        if (result.success) {
-            displayHolidaysCalendar(result.holidays);
-        }
+        const events = await CalendarView.fetchAllEvents();
+        CalendarView.renderFullCalendar('eventsCalendar', events);
     } catch (error) {
         console.error('Error:', error);
     }
-}
-
-function displayHolidaysCalendar(holidays) {
-    const container = document.getElementById('holidaysCalendar');
-    
-    if (holidays.length === 0) {
-        container.innerHTML = '<p class="text-muted">No hay feriados registrados</p>';
-        return;
-    }
-    
-    container.innerHTML = holidays.map(holiday => `
-        <div class="mb-2 p-2 border-start border-primary border-3">
-            <strong>${holiday.holidayName}</strong><br>
-            <small class="text-muted">${formatDate(holiday.holidayDate)}</small>
-        </div>
-    `).join('');
 }
 
 // Cargar mis vacaciones
