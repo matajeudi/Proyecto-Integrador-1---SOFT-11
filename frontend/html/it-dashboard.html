@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel TI - Rikimaka</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/stylesheet.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Rikimaka</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3"><i class="bi bi-person-circle"></i> <span id="userName"></span></span>
+                <button class="btn btn-outline-light btn-sm me-2" id="themeToggle" aria-label="Cambiar tema">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                </button>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group">
+                    <button class="list-group-item list-group-item-action active" data-section="project-management">
+                        Gestión de Proyectos
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-section="user-assignment">
+                        Asignación de Usuarios
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-section="project-catalog">
+                        Catálogo de Proyectos
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <!-- Seccion Gestion de Proyectos -->
+                <div id="project-management" class="content-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="h3">Gestión de Proyectos</h1>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projectModal">
+                            Crear Nuevo Proyecto
+                        </button>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <caption class="visually-hidden">Lista de proyectos registrados en el sistema</caption>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Presupuesto</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Estado</th>
+                                    <th>Usuarios Asignados</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projectsTable">
+                                <!-- Datos cargados dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Seccion Asignacion de Usuarios -->
+                <div id="user-assignment" class="content-section d-none">
+                    <h1 class="h3">Asignación de Usuarios a Proyectos</h1>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Seleccionar Proyecto</h2>
+                                </div>
+                                <div class="card-body">
+                                    <select class="form-select" id="assignmentProject">
+                                        <option value="">Seleccionar proyecto</option>
+                                        <!-- Opciones cargadas dinamicamente -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Usuarios Disponibles</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="availableUsers">
+                                        <!-- Lista de usuarios cargada dinamicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Usuarios Asignados al Proyecto</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="assignedUsers">
+                                        <!-- Usuarios asignados mostrados dinamicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seccion Catalogo de Proyectos -->
+                <div id="project-catalog" class="content-section d-none">
+                    <h1 class="h3">Catálogo de Proyectos</h1>
+                    <div class="row" id="projectCatalog">
+                        <!-- Tarjetas de proyectos cargadas dinamicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para crear/editar proyecto -->
+    <div class="modal fade" id="projectModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%);">
+                    <h2 class="modal-title h5 text-white fw-bold"><i class="bi bi-folder-plus"></i> Crear Nuevo Proyecto</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" style="background-color: #ffffff;">
+                    <form id="projectForm">
+                        <input type="hidden" id="projectId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="projectName" class="form-label text-dark fw-semibold">
+                                    <i class="bi bi-briefcase"></i> Nombre del Proyecto
+                                </label>
+                                <input type="text" class="form-control" id="projectName" placeholder="Ej: Sistema de Gestión" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="projectBudget" class="form-label text-dark fw-semibold">
+                                    <i class="bi bi-currency-dollar"></i> Presupuesto
+                                </label>
+                                <input type="number" class="form-control" id="projectBudget" min="0" placeholder="Ej: 50000" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectDescription" class="form-label text-dark fw-semibold">
+                                <i class="bi bi-file-text"></i> Descripción
+                            </label>
+                            <textarea class="form-control" id="projectDescription" rows="3" placeholder="Describa los objetivos y alcance del proyecto" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="projectStartDate" class="form-label text-dark fw-semibold">
+                                    <i class="bi bi-calendar-check"></i> Fecha de Inicio
+                                </label>
+                                <input type="date" class="form-control" id="projectStartDate" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="projectEndDate" class="form-label text-dark fw-semibold">
+                                    <i class="bi bi-calendar-x"></i> Fecha de Fin
+                                </label>
+                                <input type="date" class="form-control" id="projectEndDate" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectStatus" class="form-label text-dark fw-semibold">
+                                <i class="bi bi-flag"></i> Estado
+                            </label>
+                            <select class="form-select" id="projectStatus" required>
+                                <option value="planning">Planificación</option>
+                                <option value="active">Activo</option>
+                                <option value="completed">Completado</option>
+                                <option value="cancelled">Cancelado</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProject()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="../js/itDashboard.js"></script>
+</body>
+</html>

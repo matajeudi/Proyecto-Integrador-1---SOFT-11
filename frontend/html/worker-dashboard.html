@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Trabajador - Rikimaka</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/stylesheet.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Rikimaka</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3"><i class="bi bi-person-circle"></i> <span id="userName"></span></span>
+                <button class="btn btn-outline-light btn-sm me-2" id="themeToggle" aria-label="Cambiar tema">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                </button>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group">
+                    <button class="list-group-item list-group-item-action active" data-section="daily-report">
+                        Reporte Diario
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-section="vacation-request">
+                        Solicitar Vacaciones
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-section="my-reports">
+                        Mis Reportes
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-section="my-vacations">
+                        Mis Vacaciones
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <!-- Seccion Reporte Diario -->
+                <div id="daily-report" class="content-section">
+                    <h1 class="h3">Reporte Diario de Actividades</h1>
+                    <form id="dailyReportForm">
+                        <div class="mb-3">
+                            <label for="reportDate" class="form-label text-dark fw-semibold">
+                                <i class="bi bi-calendar-day"></i> Fecha
+                            </label>
+                            <input type="date" class="form-control" id="reportDate" required>
+                        </div>
+                        
+                        <div id="activitiesContainer">
+                            <div class="activity-item border p-3 mb-3">
+                                <h5>Actividad 1</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="activityProject0" class="form-label text-dark fw-semibold">
+                                            <i class="bi bi-folder"></i> Proyecto
+                                        </label>
+                                        <select class="form-select" id="activityProject0" required>
+                                            <option value="">Seleccionar proyecto</option>
+                                            <!-- Opciones cargadas dinamicamente -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="activityHours0" class="form-label text-dark fw-semibold">
+                                            <i class="bi bi-clock"></i> Horas Dedicadas
+                                        </label>
+                                        <input type="number" class="form-control" id="activityHours0" min="0.5" max="24" step="0.5" placeholder="Ej: 4.5" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="activityDescription0" class="form-label text-dark fw-semibold">
+                                        <i class="bi bi-file-text"></i> Descripción de Actividad
+                                    </label>
+                                    <textarea class="form-control" id="activityDescription0" rows="3" placeholder="Describa las tareas realizadas" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="activityStatus0" class="form-label text-dark fw-semibold">
+                                        <i class="bi bi-flag"></i> Estado
+                                    </label>
+                                    <select class="form-select" id="activityStatus0" required>
+                                        <option value="">Seleccionar estado</option>
+                                        <option value="completed">Completada</option>
+                                        <option value="in-progress">En Progreso</option>
+                                        <option value="blocked">Bloqueada</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-outline-primary" onclick="addActivity()">
+                                Agregar Actividad
+                            </button>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">Guardar Reporte</button>
+                    </form>
+                </div>
+
+                <!-- Seccion Solicitar Vacaciones -->
+                <div id="vacation-request" class="content-section d-none">
+                    <h1 class="h3">Solicitar Vacaciones</h1>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <form id="vacationRequestForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="vacationStartDate" class="form-label text-dark fw-semibold">
+                                            <i class="bi bi-calendar-check"></i> Fecha de Inicio
+                                        </label>
+                                        <input type="date" class="form-control" id="vacationStartDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="vacationEndDate" class="form-label text-dark fw-semibold">
+                                            <i class="bi bi-calendar-x"></i> Fecha de Fin
+                                        </label>
+                                        <input type="date" class="form-control" id="vacationEndDate" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="vacationReason" class="form-label text-dark fw-semibold">
+                                        <i class="bi bi-chat-left-quote"></i> Razón de la Solicitud
+                                    </label>
+                                    <textarea class="form-control" id="vacationReason" rows="3" placeholder="Describa el motivo de su solicitud de vacaciones" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Calendario de Feriados</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="holidaysCalendar">
+                                        <!-- Feriados cargados dinamicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seccion Mis Reportes -->
+                <div id="my-reports" class="content-section d-none">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <caption class="h3 text-start fw-bold">Mis Reportes</caption>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Total Horas</th>
+                                    <th>Actividades</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myReportsTable">
+                                <!-- Datos cargados dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Seccion Mis Vacaciones -->
+                <div id="my-vacations" class="content-section d-none">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <caption class="h3 text-start fw-bold">Mis Solicitudes de Vacaciones</caption>
+                            <thead>
+                                <tr>
+                                    <th>Fecha Solicitud</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Días</th>
+                                    <th>Estado</th>
+                                    <th>Comentarios</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myVacationsTable">
+                                <!-- Datos cargados dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="../js/workerDashboard.js"></script>
+</body>
+</html>
