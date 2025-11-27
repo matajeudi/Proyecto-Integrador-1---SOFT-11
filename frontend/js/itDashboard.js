@@ -65,6 +65,15 @@ function setupEventListeners() {
             updateActiveButton(this);
         });
     });
+    
+    // Renderiza calendario cuando se abre modal de proyecto
+    const projectModal = document.getElementById('projectModal');
+    if (projectModal) {
+        projectModal.addEventListener('shown.bs.modal', async function() {
+            const events = await CalendarView.fetchAllEvents();
+            CalendarView.renderFullCalendar('projectModalCalendar', events);
+        });
+    }
 }
 
 function showSection(sectionId) {
