@@ -142,26 +142,23 @@ function formatDate(dateString) {
 }
 
 function showSuccess(message) {
-    showAlert(message, 'success');
+    Swal.fire({
+        title: 'Exitoso',
+        text: message,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#198754'
+    });
 }
 
 function showError(message) {
-    showAlert(message, 'danger');
-}
-
-function showAlert(message, type) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    document.querySelector('.container-fluid').prepend(alertDiv);
-    
-    setTimeout(() => {
-        alertDiv.remove();
-    }, 5000);
+    Swal.fire({
+        title: 'Error',
+        text: message,
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#dc3545'
+    });
 }
 
 // Cargar periodos de vacaciones
@@ -181,13 +178,61 @@ async function loadVacationPeriods() {
 
 // Guardar proyecto
 async function saveProject() {
+    const projectName = document.getElementById('projectName').value.trim();
+    const projectDescription = document.getElementById('projectDescription').value.trim();
+    const projectBudget = parseFloat(document.getElementById('projectBudget').value);
+    const projectStartDate = document.getElementById('projectStartDate').value;
+    const projectEndDate = document.getElementById('projectEndDate').value;
+    const projectStatus = document.getElementById('projectStatus').value;
+    
+    if (projectName.length < 3) {
+        showError('El nombre del proyecto debe tener al menos 3 caracteres');
+        return;
+    }
+    
+    if (projectName.length > 100) {
+        showError('El nombre del proyecto no puede exceder 100 caracteres');
+        return;
+    }
+    
+    if (projectDescription.length < 10) {
+        showError('La descripcion debe tener al menos 10 caracteres');
+        return;
+    }
+    
+    if (projectDescription.length > 1000) {
+        showError('La descripcion no puede exceder 1000 caracteres');
+        return;
+    }
+    
+    if (isNaN(projectBudget) || projectBudget <= 0) {
+        showError('El presupuesto debe ser un numero positivo');
+        return;
+    }
+    
+    if (projectBudget > 999999999) {
+        showError('El presupuesto no puede exceder 999,999,999');
+        return;
+    }
+    
+    if (new Date(projectEndDate) <= new Date(projectStartDate)) {
+        showError('La fecha de fin debe ser posterior a la fecha de inicio');
+        return;
+    }
+    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const usersResponse = await fetch(`${API_BASE_URL}/users`);
+    const users = await usersResponse.json();
+    const currentUserData = users.find(u => u.userEmail === currentUser.email);
+    
     const projectData = {
-        projectName: document.getElementById('projectName').value,
-        projectDescription: document.getElementById('projectDescription').value,
-        projectBudget: document.getElementById('projectBudget').value,
-        projectStartDate: document.getElementById('projectStartDate').value,
-        projectEndDate: document.getElementById('projectEndDate').value,
-        projectStatus: document.getElementById('projectStatus').value
+        projectName: projectName,
+        projectDescription: projectDescription,
+        projectBudget: projectBudget,
+        projectStartDate: projectStartDate,
+        projectEndDate: projectEndDate,
+        projectStatus: projectStatus,
+        projectCreatedBy: currentUserData._id
     };
     
     try {
@@ -536,7 +581,18 @@ async function unassignUserFromProject(projectId, userId) {
 
 // Eliminar proyecto
 async function deleteProject(projectId) {
-    if (!confirm('¿Esta seguro de eliminar este proyecto?')) {
+    const result = await Swal.fire({
+        title: '¿Está seguro?',
+        text: 'Se eliminará este proyecto',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d'
+    });
+    
+    if (!result.isConfirmed) {
         return;
     }
     

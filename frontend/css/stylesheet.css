@@ -8,25 +8,25 @@
   --primary-gradient-end: #4a6fa5;
   --navbar-bg: #d5e3e6;
   --hero-bg: #66748f;
-  
+
   /* Colores de fondo */
   --bg-body: #fbfaf8;
   --bg-content: #f9f7f4;
   --bg-card: #f9f7f4;
   --bg-item: #f9f7f4;
   --bg-table-header: #4a6fa5;
-  
+
   /* Colores de texto */
   --text-primary: #000000;
   --text-secondary: #8b6570;
   --text-light: #ffffff;
   --text-muted: #8b6570;
-  
+
   /* Colores de acento */
   --accent-primary: #c9647b;
   --accent-secondary: #8b6570;
   --accent-link: #4a6fa5;
-  
+
   /* Colores de estado */
   --status-pending: #ffc107;
   --status-pending-text: #000000;
@@ -36,11 +36,11 @@
   --status-rejected-text: #ffffff;
   --status-in-progress: #4a6fa5;
   --status-in-progress-text: #ffffff;
-  
+
   /* Colores de bordes */
   --border-color: #d5e3e6;
   --border-focus: #4a6fa5;
-  
+
   /* Colores de botones */
   --btn-primary: #c9647b;
   --btn-primary-hover: #b55569;
@@ -48,7 +48,7 @@
   --btn-secondary-hover: #7a5763;
   --btn-danger: #dc3545;
   --btn-danger-hover: #c82333;
-  
+
   /* Sombras */
   --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -65,25 +65,25 @@
   --primary-gradient-end: #5a7a9e;
   --navbar-bg: #1a2d32;
   --hero-bg: #8b9ab5;
-  
+
   /* Colores de fondo */
   --bg-body: #1c1b19;
   --bg-content: #2a2826;
   --bg-card: #2a2826;
   --bg-item: #2a2826;
   --bg-table-header: #1a2d32;
-  
+
   /* Colores de texto */
   --text-primary: #e8e6e3;
   --text-secondary: #a67c8a;
   --text-light: #ffffff;
   --text-muted: #a67c8a;
-  
+
   /* Colores de acento */
   --accent-primary: #d4879c;
   --accent-secondary: #a67c8a;
   --accent-link: #5a7a9e;
-  
+
   /* Colores de estado */
   --status-pending: #ffc107;
   --status-pending-text: #000000;
@@ -93,15 +93,15 @@
   --status-rejected-text: #ffffff;
   --status-in-progress: #5a7a9e;
   --status-in-progress-text: #ffffff;
-  
+
   /* Colores de bordes */
   --border-color: #3a3836;
   --border-input: #4a4846;
   --border-focus: #5a7a9e;
-  
+
   /* Colores de placeholder */
   --placeholder-color: #9a9a9a;
-  
+
   /* Colores de botones */
   --btn-primary: #d4879c;
   --btn-primary-hover: #e098ad;
@@ -109,7 +109,7 @@
   --btn-secondary-hover: #b88d9b;
   --btn-danger: #dc3545;
   --btn-danger-hover: #c82333;
-  
+
   /* Sombras */
   --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.6);
@@ -191,19 +191,43 @@ caption {
    ANIMACIONES
    ======================================== */
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-5deg);
+  }
+
+  75% {
+    transform: rotate(5deg);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .btn {
@@ -402,12 +426,25 @@ caption {
   color: var(--text-primary) !important;
 }
 
+.navbar-text {
+  font-weight: 350;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  color: var(--text-primary) !important;
+}
+
 .navbar .nav-link {
   color: var(--text-primary) !important;
 }
 
 .navbar .nav-link:hover {
   color: var(--accent-link) !important;
+}
+
+.navbar-nav {
+  justify-content: center !important;
+  align-items: center !important
 }
 
 [data-theme="dark"] .navbar {
@@ -421,6 +458,10 @@ caption {
 
 [data-theme="dark"] .navbar .nav-link:hover {
   color: var(--accent-link) !important;
+}
+
+[data-theme="dark"] .navbar-text {
+  color: var(--text-primary) !important;
 }
 
 .content-section {
@@ -534,7 +575,7 @@ caption {
   .content-section {
     padding: 1rem;
   }
-  
+
   .table-responsive {
     font-size: 0.875rem;
   }
