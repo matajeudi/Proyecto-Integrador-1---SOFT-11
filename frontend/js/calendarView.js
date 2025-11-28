@@ -23,18 +23,18 @@ const CalendarView = {
 
     let html = `
       <div class="calendar-header">
-        <button class="btn btn-sm btn-outline-secondary" onclick="CalendarView.previousMonth('${containerId}')">
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="CalendarView.previousMonth('${containerId}', event)">
           <i class="bi bi-chevron-left"></i>
         </button>
         <h5 class="mb-0">${this.getMonthName(month)} ${year}</h5>
-        <button class="btn btn-sm btn-outline-secondary" onclick="CalendarView.nextMonth('${containerId}')">
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="CalendarView.nextMonth('${containerId}', event)">
           <i class="bi bi-chevron-right"></i>
         </button>
       </div>
       <div class="calendar-legend">
         <span class="legend-item"><span class="legend-color" style="background: ${this.eventColors.holiday}"></span> Feriados</span>
         <span class="legend-item"><span class="legend-color" style="background: ${this.eventColors.vacation}"></span> Vacaciones</span>
-        <span class="legend-item"><span class="legend-color" style="background: ${this.eventColors.period}"></span> Periodos</span>
+        <span class="legend-item"><span class="legend-color" style="background: ${this.eventColors.period}"></span> No disponible</span>
       </div>
       <div class="calendar-grid">
         <div class="calendar-day-header">Dom</div>
@@ -148,7 +148,8 @@ const CalendarView = {
   },
 
   // Navega al mes anterior y recarga calendario
-  previousMonth(containerId) {
+  previousMonth(containerId, event) {
+    if (event) event.preventDefault();
     const container = document.getElementById(containerId);
     const currentMonth = new Date(container.dataset.currentMonth);
     currentMonth.setMonth(currentMonth.getMonth() - 1);
@@ -157,7 +158,8 @@ const CalendarView = {
   },
 
   // Navega al mes siguiente y recarga calendario
-  nextMonth(containerId) {
+  nextMonth(containerId, event) {
+    if (event) event.preventDefault();
     const container = document.getElementById(containerId);
     const currentMonth = new Date(container.dataset.currentMonth);
     currentMonth.setMonth(currentMonth.getMonth() + 1);
@@ -217,13 +219,14 @@ const CalendarView = {
       });
       const vacationsData = await vacationsRes.json();
       
-      if (vacationsData.success) {
-        vacationsData.vacations
+      if (Array.isArray(vacationsData)) {
+        vacationsData
           .filter(vac => vac.vacationStatus === 'approved')
           .forEach(vacation => {
+            const workerName = vacation.vacationUser?.userFullName || 'Usuario';
             events.push({
               type: 'vacation',
-              title: 'Vacaciones',
+              title: workerName,
               startDate: vacation.vacationStartDate,
               endDate: vacation.vacationEndDate
             });

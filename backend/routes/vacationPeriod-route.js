@@ -21,6 +21,31 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET - Obtener periodo por ID
+router.get('/:id', async (req, res) => {
+  try {
+    const period = await VacationPeriod.findById(req.params.id);
+    
+    if (!period) {
+      return res.status(404).json({
+        success: false,
+        message: 'Periodo no encontrado'
+      });
+    }
+    
+    res.json({
+      success: true,
+      period: period
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error obteniendo periodo',
+      error: error.message
+    });
+  }
+});
+
 // POST - Crear nuevo periodo
 router.post('/', async (req, res) => {
   try {
@@ -44,6 +69,41 @@ router.post('/', async (req, res) => {
     res.status(400).json({
       success: false,
       message: 'Error creando periodo',
+      error: error.message
+    });
+  }
+});
+
+// PUT - Actualizar periodo
+router.put('/:id', async (req, res) => {
+  try {
+    const { periodName, periodStartDate, periodEndDate, periodDescription } = req.body;
+    
+    const period = await VacationPeriod.findById(req.params.id);
+    
+    if (!period) {
+      return res.status(404).json({
+        success: false,
+        message: 'Periodo no encontrado'
+      });
+    }
+    
+    if (periodName) period.periodName = periodName;
+    if (periodStartDate) period.periodStartDate = periodStartDate;
+    if (periodEndDate) period.periodEndDate = periodEndDate;
+    if (periodDescription !== undefined) period.periodDescription = periodDescription;
+    
+    await period.save();
+    
+    res.json({
+      success: true,
+      message: 'Periodo actualizado correctamente',
+      period: period
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'Error actualizando periodo',
       error: error.message
     });
   }

@@ -16,6 +16,7 @@
             <a class="navbar-brand" href="#">
                 <i class="bi bi-building" aria-hidden="true"></i> Rikimaka
             </a>
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -148,14 +149,14 @@
                             <label for="userEmail" class="form-label text-dark fw-semibold">
                                 <i class="bi bi-envelope-fill" aria-hidden="true"></i> Correo Electrónico
                             </label>
-                            <input type="email" class="form-control" id="userEmail" placeholder="ejemplo@rikimaka.com" required aria-required="true">
+                            <input type="email" class="form-control" id="userEmail" placeholder="ejemplo@rikimaka.com" minlength="5" maxlength="100" required aria-required="true">
                         </div>
                         <div class="mb-3">
                             <label for="userPassword" class="form-label text-dark fw-semibold">
                                 <i class="bi bi-lock-fill" aria-hidden="true"></i> Contraseña
                             </label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="userPassword" placeholder="Ingrese su contraseña" required aria-required="true">
+                                <input type="password" class="form-control" id="userPassword" placeholder="Ingrese su contraseña" minlength="3" maxlength="50" required aria-required="true">
                                 <button class="btn btn-outline-secondary" type="button" id="togglePassword" aria-label="Mostrar u ocultar contraseña">
                                     <i class="bi bi-eye-fill" id="toggleIcon"></i>
                                 </button>

@@ -1,27 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrador - Rikimaka</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../css/stylesheet.css">
     <link rel="stylesheet" href="../css/calendarView.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.css">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="#"><i class="bi bi-building" aria-hidden="true"></i> Rikimaka</a>
-            <div class="navbar-nav ms-auto">
-                <span class="navbar-text me-3"><i class="bi bi-person-circle" aria-hidden="true"></i> <span id="userName"></span></span>
-                <button class="btn btn-outline-light btn-sm me-2" id="themeToggle" aria-label="Cambiar tema">
-                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
-                </button>
-                <button class="btn btn-outline-light btn-sm" onclick="logout()">
-                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i> Cerrar Sesión
-                </button>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><span class="navbar-text me-3"><i class="bi bi-person-circle"
+                                aria-hidden="true"></i> <span id="userName"></span></span>
+                    </li>
+
+                    <!-- darkmode toggle -->
+                    <li><button class="btn btn-light btn-sm m-1" id="themeToggle" aria-label="Cambiar tema">
+                            <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                        </button></li>
+                    
+                    <li><button class="btn btn-light btn-sm m-1" onclick="logout()">
+                            <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i> Cerrar Sesión
+                        </button></li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -124,9 +140,12 @@
                                     <form id="periodForm">
                                         <div class="mb-3">
                                             <label for="periodName" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-calendar-range" aria-hidden="true"></i> Nombre del Período
+                                                <i class="bi bi-calendar-range" aria-hidden="true"></i> Nombre del
+                                                Período
                                             </label>
-                                            <input type="text" class="form-control" id="periodName" placeholder="Ej: Vacaciones 2025" required>
+                                            <input type="text" class="form-control" id="periodName"
+                                                placeholder="Ej: Vacaciones 2025" minlength="3" maxlength="100"
+                                                required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="periodStartDate" class="form-label text-dark fw-semibold">
@@ -142,9 +161,11 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="periodDescription" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-card-text" aria-hidden="true"></i> Descripción (Opcional)
+                                                <i class="bi bi-card-text" aria-hidden="true"></i> Descripción
+                                                (Opcional)
                                             </label>
-                                            <textarea class="form-control" id="periodDescription" rows="2" placeholder="Descripción del período"></textarea>
+                                            <textarea class="form-control" id="periodDescription" rows="2"
+                                                placeholder="Descripción del período" maxlength="500"></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary">
                                             <i class="bi bi-plus-circle" aria-hidden="true"></i> Agregar Período
@@ -181,9 +202,12 @@
                                     <form id="holidayForm">
                                         <div class="mb-3">
                                             <label for="holidayName" class="form-label text-dark fw-semibold">
-                                                <i class="bi bi-calendar-event" aria-hidden="true"></i> Nombre del Feriado
+                                                <i class="bi bi-calendar-event" aria-hidden="true"></i> Nombre del
+                                                Feriado
                                             </label>
-                                            <input type="text" class="form-control" id="holidayName" placeholder="Ej: Día de la Independencia" required>
+                                            <input type="text" class="form-control" id="holidayName"
+                                                placeholder="Ej: Día de la Independencia" minlength="3" maxlength="100"
+                                                required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="holidayDate" class="form-label text-dark fw-semibold">
@@ -221,8 +245,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
-                    <h2 class="modal-title h5 text-white fw-bold"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Procesar Solicitud</h2>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <h2 class="modal-title h5 text-white fw-bold"><i class="bi bi-clipboard-check"
+                            aria-hidden="true"></i> Procesar Solicitud</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body" style="background-color: #ffffff;">
                     <form id="vacationApprovalForm">
@@ -231,7 +257,8 @@
                             <label for="vacationComments" class="form-label text-dark fw-semibold">
                                 <i class="bi bi-chat-left-text-fill" aria-hidden="true"></i> Comentarios
                             </label>
-                            <textarea class="form-control" id="vacationComments" rows="3" placeholder="Ingrese comentarios sobre la solicitud (opcional)"></textarea>
+                            <textarea class="form-control" id="vacationComments" rows="3"
+                                placeholder="Ingrese comentarios sobre la solicitud (opcional)"></textarea>
                         </div>
                     </form>
                 </div>
@@ -244,10 +271,13 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
     <script src="../js/calendarView.js"></script>
     <script src="../js/adminDashboard.js"></script>
 </body>
+
 </html>

@@ -142,7 +142,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE - Eliminar solicitud (solo si esta pendiente)
+// DELETE - Eliminar solicitud (pendiente o aprobada)
 router.delete('/:id', async (req, res) => {
   try {
     const vacation = await Vacation.findById(req.params.id);
@@ -151,8 +151,8 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Solicitud no encontrada' });
     }
     
-    if (vacation.vacationStatus !== 'pending') {
-      return res.status(400).json({ message: 'Solo se pueden eliminar solicitudes pendientes' });
+    if (vacation.vacationStatus === 'rejected') {
+      return res.status(400).json({ message: 'No se pueden eliminar solicitudes rechazadas' });
     }
 
     await Vacation.findByIdAndDelete(req.params.id);

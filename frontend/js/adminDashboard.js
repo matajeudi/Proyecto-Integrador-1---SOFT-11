@@ -381,35 +381,71 @@ function displayWorkloadStats(stats) {
 async function handleHolidaySubmit(e) {
     e.preventDefault();
     
-    // Obtener datos del formulario
+    const form = e.target;
+    const editId = form.dataset.editId;
+    const holidayName = document.getElementById('holidayName').value.trim();
+    const holidayDate = document.getElementById('holidayDate').value;
+    
+    if (holidayName.length < 3) {
+        showError('El nombre del feriado debe tener al menos 3 caracteres');
+        return;
+    }
+    
+    if (holidayName.length > 100) {
+        showError('El nombre del feriado no puede exceder 100 caracteres');
+        return;
+    }
+    
     const holidayData = {
-        holidayName: document.getElementById('holidayName').value,
-        holidayDate: document.getElementById('holidayDate').value
+        holidayName: holidayName,
+        holidayDate: holidayDate
     };
     
     try {
-        // Enviar peticion POST al backend para crear feriado
-        const response = await fetch(`${API_BASE_URL}/holidays`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(holidayData)
-        });
+        let response;
+        if (editId) {
+            response = await fetch(`${API_BASE_URL}/holidays/${editId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(holidayData)
+            });
+        } else {
+            response = await fetch(`${API_BASE_URL}/holidays`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(holidayData)
+            });
+        }
         
         const result = await response.json();
         
-        // Verificar si la operacion fue exitosa
         if (result.success) {
-            showSuccess('Feriado agregado correctamente');
-            e.target.reset(); // Limpiar formulario
-            loadHolidays(); // Recargar lista de feriados
+            showSuccess(editId ? 'Feriado actualizado correctamente' : 'Feriado agregado correctamente');
+            form.reset();
+            delete form.dataset.editId;
+            loadHolidays();
         } else {
-            showError(result.message || 'Error agregando feriado');
+            showError(result.message || 'Error procesando feriado');
         }
     } catch (error) {
         console.error('Error:', error);
         showError('Error conectando con el servidor');
+    }
+}
+
+async function editHoliday(holidayId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/holidays/${holidayId}`);
+        const result = await response.json();
+        
+        if (result.success && result.holiday) {
+            const holiday = result.holiday;
+            document.getElementById('holidayName').value = holiday.holidayName;
+            document.getElementById('holidayDate').value = holiday.holidayDate.split('T')[0];
+            document.getElementById('holidayForm').dataset.editId = holidayId;
+        }
+    } catch (error) {
+        showError('Error cargando feriado');
     }
 }
 
@@ -441,16 +477,21 @@ function displayHolidays(holidays) {
         return;
     }
     
-    // Crear HTML para cada feriado con boton de eliminar
+    // Crear HTML para cada feriado con botones editar y eliminar
     container.innerHTML = holidays.map(holiday => `
         <div class="holiday-item d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
             <div>
                 <strong>${holiday.holidayName}</strong><br>
                 <small class="text-muted">${formatDate(holiday.holidayDate)}</small>
             </div>
-            <button class="btn btn-sm btn-danger" onclick="deleteHoliday('${holiday._id}')">
-                <i class="bi bi-trash"></i>
-            </button>
+            <div>
+                <button class="btn btn-sm btn-primary me-1" onclick="editHoliday('${holiday._id}')">
+                    <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deleteHoliday('${holiday._id}')">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
         </div>
     `).join('');
 }
@@ -532,43 +573,87 @@ function showError(message) {
 async function handlePeriodSubmit(e) {
     e.preventDefault();
     
-    // Obtener datos del formulario
+    const form = e.target;
+    const editId = form.dataset.editId;
+    const periodName = document.getElementById('periodName').value.trim();
+    const periodStartDate = document.getElementById('periodStartDate').value;
+    const periodEndDate = document.getElementById('periodEndDate').value;
+    const periodDescription = document.getElementById('periodDescription').value.trim();
+    
+    if (periodName.length < 3) {
+        showError('El nombre del periodo debe tener al menos 3 caracteres');
+        return;
+    }
+    
+    if (periodName.length > 100) {
+        showError('El nombre del periodo no puede exceder 100 caracteres');
+        return;
+    }
+    
+    if (periodDescription && periodDescription.length > 500) {
+        showError('La descripcion no puede exceder 500 caracteres');
+        return;
+    }
+    
     const periodData = {
-        periodName: document.getElementById('periodName').value,
-        periodStartDate: document.getElementById('periodStartDate').value,
-        periodEndDate: document.getElementById('periodEndDate').value,
-        periodDescription: document.getElementById('periodDescription').value
+        periodName: periodName,
+        periodStartDate: periodStartDate,
+        periodEndDate: periodEndDate,
+        periodDescription: periodDescription
     };
     
-    // Validar que la fecha de fin sea posterior a la fecha de inicio
     if (new Date(periodData.periodEndDate) <= new Date(periodData.periodStartDate)) {
         showError('La fecha de fin debe ser posterior a la fecha de inicio');
         return;
     }
     
     try {
-        // Enviar peticion POST al backend para crear periodo
-        const response = await fetch(`${API_BASE_URL}/vacation-periods`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(periodData)
-        });
+        let response;
+        if (editId) {
+            response = await fetch(`${API_BASE_URL}/vacation-periods/${editId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(periodData)
+            });
+        } else {
+            response = await fetch(`${API_BASE_URL}/vacation-periods`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(periodData)
+            });
+        }
         
         const result = await response.json();
         
-        // Verificar si la operacion fue exitosa
         if (result.success) {
-            showSuccess('Periodo agregado correctamente');
-            e.target.reset(); // Limpiar formulario
-            loadVacationPeriods(); // Recargar lista de periodos
+            showSuccess(editId ? 'Periodo actualizado correctamente' : 'Periodo agregado correctamente');
+            form.reset();
+            delete form.dataset.editId;
+            loadVacationPeriods();
         } else {
-            showError(result.message || 'Error agregando periodo');
+            showError(result.message || 'Error procesando periodo');
         }
     } catch (error) {
         console.error('Error:', error);
         showError('Error conectando con el servidor');
+    }
+}
+
+async function editVacationPeriod(periodId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/vacation-periods/${periodId}`);
+        const result = await response.json();
+        
+        if (result.success && result.period) {
+            const period = result.period;
+            document.getElementById('periodName').value = period.periodName;
+            document.getElementById('periodStartDate').value = period.periodStartDate.split('T')[0];
+            document.getElementById('periodEndDate').value = period.periodEndDate.split('T')[0];
+            document.getElementById('periodDescription').value = period.periodDescription || '';
+            document.getElementById('periodForm').dataset.editId = periodId;
+        }
+    } catch (error) {
+        showError('Error cargando periodo');
     }
 }
 
@@ -623,9 +708,14 @@ function displayVacationPeriods(periods) {
                         </small>
                         ${period.periodDescription ? `<p class="mb-0 mt-2 small">${period.periodDescription}</p>` : ''}
                     </div>
-                    <button class="btn btn-sm btn-danger" onclick="deleteVacationPeriod('${period._id}')">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                    <div>
+                        <button class="btn btn-sm btn-primary me-1" onclick="editVacationPeriod('${period._id}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteVacationPeriod('${period._id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         `;

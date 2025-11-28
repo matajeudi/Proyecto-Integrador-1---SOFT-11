@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dependencias
 node_modules/
 backend/node_modules/
@@ -32,3 +33,9 @@ build/
 # Temporal
 *.tmp
 *.temp
+=======
+
+backend/node_modules/
+
+backend/.env
+>>>>>>> Docs
