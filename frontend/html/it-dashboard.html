@@ -186,6 +186,13 @@
                                 placeholder="Describa los objetivos y alcance del proyecto" minlength="10"
                                 maxlength="1000" required></textarea>
                         </div>
+                        <div class="mb-3">
+                            <label for="projectEstimatedHours" class="form-label text-dark fw-semibold">
+                                <i class="bi bi-clock-history" aria-hidden="true"></i> Horas Estimadas (Opcional)
+                            </label>
+                            <input type="number" class="form-control" id="projectEstimatedHours" min="0" max="10000" step="1" placeholder="Ej: 200">
+                            <small class="text-muted">Si no se especifica, se calculará automáticamente según el presupuesto</small>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="projectStartDate" class="form-label text-dark fw-semibold">
