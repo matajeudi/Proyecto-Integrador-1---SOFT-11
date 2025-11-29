@@ -361,7 +361,7 @@ function addActivity() {
     const activityDiv = document.createElement('div');
     activityDiv.className = 'activity-item border p-3 mb-3';
     activityDiv.innerHTML = `
-        <h5>Actividad ${activityCount}</h5>
+        <h2 class="h5">Actividad ${activityCount}</h2>
         <div class="row">
             <div class="col-md-6">
                 <label for="activityProject${activityCount - 1}" class="form-label text-dark fw-semibold">
@@ -488,7 +488,7 @@ async function handleDailyReportSubmit(e) {
             document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('activitiesContainer').innerHTML = `
                 <div class="activity-item border p-3 mb-3">
-                    <h5>Actividad 1</h5>
+                    <h2 class="h5">Actividad 1</h2>
                     <div class="row">
                         <div class="col-md-6">
                             <label for="activityProject0" class="form-label text-dark fw-semibold">

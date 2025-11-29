@@ -42,9 +42,9 @@
   --border-focus: #4a6fa5;
 
   /* Colores de botones */
-  --btn-primary: #c9647b;
+  --btn-primary: #FF8FCE;
   --btn-primary-hover: #b55569;
-  --btn-secondary: #8b6570;
+  --btn-secondary: #8583FD;
   --btn-secondary-hover: #7a5763;
   --btn-danger: #dc3545;
   --btn-danger-hover: #c82333;
@@ -121,8 +121,12 @@
    ======================================== */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-body);
+  background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
   color: var(--text-primary);
+}
+
+#nosotros {
+  color: var(--text-light);
 }
 
 html {
@@ -244,10 +248,24 @@ caption {
   box-shadow: var(--shadow-active);
 }
 
-.btn-primary {
+/* .btn-primary {
   background-color: var(--btn-primary) !important;
   border-color: var(--btn-primary) !important;
   color: var(--text-light) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--btn-primary-hover) !important;
+  border-color: var(--btn-primary-hover) !important;
+} */
+
+/* #FF8FCE y #8583FD */
+
+.btn-primary {
+  background-color: var(--btn-primary) !important;
+  border-color: var(--btn-primary) !important;
+  color: var(--text-primary) !important;
 }
 
 .btn-primary:hover,
@@ -280,8 +298,9 @@ caption {
 }
 
 .btn-outline-primary {
-  color: var(--btn-primary) !important;
-  border-color: var(--btn-primary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--btn-secondary) !important;
+  background-color: var(--btn-secondary);
 }
 
 .btn-outline-primary:hover {
@@ -295,11 +314,18 @@ caption {
 
 .list-group-item {
   transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .list-group-item:hover {
   transform: translateX(5px);
   background-color: var(--bg-item);
+}
+
+.list-group-item.active {
+    color: var(--text-primary) !important;
+    background-color: var(--navbar-bg) !important;
+    border-color: var(--navbar-bg) !important;
 }
 
 .modal.show .modal-dialog {
@@ -320,8 +346,12 @@ caption {
    DARK MODE OVERRIDES
    ======================================== */
 [data-theme="dark"] body {
-  background-color: var(--bg-body);
-  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--primary-gradient-start) 100%, var(--primary-gradient-end) 100%);
+}
+
+[data-theme="dark"] #nosotros {
+  color: #000000;
+  font-weight: 500 !important;
 }
 
 [data-theme="dark"] .content-section,
@@ -397,7 +427,7 @@ caption {
 }
 
 [data-theme="dark"] .list-group-item.active {
-  background-color: var(--primary-color);
+  background-color: var(--navbar-bg);
   border-color: var(--primary-color);
 }
 
@@ -427,7 +457,7 @@ caption {
 }
 
 .navbar-text {
-  font-weight: 350;
+  font-weight: 500;
   font-size: 1rem;
   display: flex;
   align-items: center;
@@ -517,8 +547,8 @@ caption {
 }
 
 .table th {
-  background-color: var(--bg-table-header);
-  color: var(--text-light);
+  background-color: var(--navbar-bg);
+  color: var(--text-primary);
   border: none;
 }
 
