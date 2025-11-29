@@ -25,7 +25,7 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><span class="navbar-text me-3"><i class="bi bi-person-circle"
+                    <li class="nav-item"><span class="navbar-text me-3"><i class="bi bi-person-circle p-1"
                                 aria-hidden="true"></i> <span id="userName"></span></span>
                     </li>
 
@@ -87,7 +87,7 @@
                 <!-- Seccion Reportes y Estadisticas -->
                 <div id="reports-stats" class="content-section d-none">
                     <h1 class="h3">Reportes y Estadísticas</h1>
-                    <div class="row">
+                    <div class="row mb-4">
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
@@ -101,11 +101,49 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h2 class="h5">Distribución de Carga</h2>
+                                    <h2 class="h5">Carga por Trabajador</h2>
                                 </div>
                                 <div class="card-body">
-                                    <div id="workloadStats">
-                                        <!-- Estadisticas cargadas dinamicamente -->
+                                    <canvas id="workloadChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Eficiencia por Proyecto</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="efficiencyStats">
+                                        <!-- Analisis de eficiencia -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Resumen de Carga</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="workloadSummary">
+                                        <!-- Resumen de trabajadores -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="h5">Métricas Generales</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="generalMetrics">
+                                        <!-- Metricas generales -->
                                     </div>
                                 </div>
                             </div>
