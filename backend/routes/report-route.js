@@ -110,7 +110,7 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// GET - Estadisticas de horas por proyecto
+// GET - Estadisticas de horas por proyecto con eficiencia
 router.get('/stats/hours-by-project', async (req, res) => {
   try {
     const stats = await DailyReport.aggregate([
@@ -134,6 +134,8 @@ router.get('/stats/hours-by-project', async (req, res) => {
       {
         $project: {
           projectName: '$project.projectName',
+          projectBudget: '$project.projectBudget',
+          projectEstimatedHours: '$project.projectEstimatedHours',
           totalHours: 1,
           reportCount: 1
         }
@@ -143,6 +145,46 @@ router.get('/stats/hours-by-project', async (req, res) => {
     res.json(stats);
   } catch (error) {
     res.status(500).json({ message: 'Error obteniendo estadisticas', error: error.message });
+  }
+});
+
+// GET - Distribucion de carga de trabajo por trabajador
+router.get('/stats/workload-distribution', async (req, res) => {
+  try {
+    const workload = await DailyReport.aggregate([
+      { $unwind: '$reportActivities' },
+      {
+        $group: {
+          _id: '$reportUser',
+          totalHours: { $sum: '$reportActivities.activityHours' },
+          reportDays: { $addToSet: '$reportDate' },
+          projects: { $addToSet: '$reportActivities.activityProject' }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      { $unwind: '$user' },
+      {
+        $project: {
+          userName: '$user.userFullName',
+          totalHours: 1,
+          daysWorked: { $size: '$reportDays' },
+          projectCount: { $size: '$projects' },
+          avgHoursPerDay: { $divide: ['$totalHours', { $size: '$reportDays' }] }
+        }
+      },
+      { $sort: { totalHours: -1 } }
+    ]);
+    
+    res.json(workload);
+  } catch (error) {
+    res.status(500).json({ message: 'Error obteniendo distribucion de carga', error: error.message });
   }
 });
 

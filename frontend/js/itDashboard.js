@@ -73,6 +73,12 @@ function setupEventListeners() {
             const events = await CalendarView.fetchAllEvents();
             CalendarView.renderFullCalendar('projectModalCalendar', events);
         });
+        
+        projectModal.addEventListener('hidden.bs.modal', function() {
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = '';
+            document.querySelector('#projectModal .modal-title').innerHTML = '<i class="bi bi-folder-plus"></i> Crear Nuevo Proyecto';
+        });
     }
 }
 
@@ -178,6 +184,7 @@ async function loadVacationPeriods() {
 
 // Guardar proyecto
 async function saveProject() {
+    const projectId = document.getElementById('projectId').value;
     const projectName = document.getElementById('projectName').value.trim();
     const projectDescription = document.getElementById('projectDescription').value.trim();
     const projectBudget = parseFloat(document.getElementById('projectBudget').value);
@@ -220,24 +227,33 @@ async function saveProject() {
         return;
     }
     
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const usersResponse = await fetch(`${API_BASE_URL}/users`);
-    const users = await usersResponse.json();
-    const currentUserData = users.find(u => u.userEmail === currentUser.email);
+    const estimatedHoursInput = document.getElementById('projectEstimatedHours').value;
+    const estimatedHours = estimatedHoursInput && estimatedHoursInput.trim() !== '' ? parseFloat(estimatedHoursInput) : 0;
     
     const projectData = {
         projectName: projectName,
         projectDescription: projectDescription,
         projectBudget: projectBudget,
+        projectEstimatedHours: estimatedHours,
         projectStartDate: projectStartDate,
         projectEndDate: projectEndDate,
-        projectStatus: projectStatus,
-        projectCreatedBy: currentUserData._id
+        projectStatus: projectStatus
     };
     
+    if (!projectId) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const usersResponse = await fetch(`${API_BASE_URL}/users`);
+        const users = await usersResponse.json();
+        const currentUserData = users.find(u => u.userEmail === currentUser.email);
+        projectData.projectCreatedBy = currentUserData._id;
+    }
+    
     try {
-        const response = await fetch(`${API_BASE_URL}/projects`, {
-            method: 'POST',
+        const url = projectId ? `${API_BASE_URL}/projects/${projectId}` : `${API_BASE_URL}/projects`;
+        const method = projectId ? 'PUT' : 'POST';
+        
+        const response = await fetch(url, {
+            method: method,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -245,13 +261,15 @@ async function saveProject() {
         });
         
         if (response.ok) {
-            showSuccess('Proyecto creado correctamente');
+            showSuccess(projectId ? 'Proyecto actualizado correctamente' : 'Proyecto creado correctamente');
             bootstrap.Modal.getInstance(document.getElementById('projectModal')).hide();
             document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = '';
+            document.querySelector('#projectModal .modal-title').innerHTML = '<i class="bi bi-folder-plus"></i> Crear Nuevo Proyecto';
             loadProjects();
         } else {
             const error = await response.json();
-            showError(error.message || 'Error creando proyecto');
+            showError(error.message || 'Error guardando proyecto');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -351,6 +369,7 @@ async function editProject(projectId) {
         document.getElementById('projectBudget').value = project.projectBudget;
         document.getElementById('projectStartDate').value = project.projectStartDate.split('T')[0];
         document.getElementById('projectEndDate').value = project.projectEndDate.split('T')[0];
+        document.getElementById('projectEstimatedHours').value = project.projectEstimatedHours || '';
         document.getElementById('projectStatus').value = project.projectStatus;
         
         document.querySelector('#projectModal .modal-title').innerHTML = '<i class="bi bi-pencil"></i> Editar Proyecto';

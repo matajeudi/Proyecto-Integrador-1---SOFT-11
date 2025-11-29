@@ -307,20 +307,42 @@ async function rejectVacation() {
     }
 }
 
-// Carga las estadisticas de horas trabajadas por proyecto desde el servidor
+// Variables globales para almacenar instancias de graficos
+let hoursChartInstance = null;
+let workloadChartInstance = null;
+
+// Carga todas las estadisticas desde el servidor
 async function loadReportsStats() {
     try {
-        // Solicita al servidor las estadisticas de horas por proyecto
-        const response = await fetch(`${API_BASE_URL}/reports/stats/hours-by-project`);
-        // Convierte la respuesta del servidor en un objeto JavaScript
-        const stats = await response.json();
-        // Muestra los datos en un grafico de barras
-        displayHoursChart(stats);
-        // Muestra los datos en una lista con totales
-        displayWorkloadStats(stats);
+        // Destruir graficos existentes antes de crear nuevos
+        if (hoursChartInstance) {
+            hoursChartInstance.destroy();
+            hoursChartInstance = null;
+        }
+        if (workloadChartInstance) {
+            workloadChartInstance.destroy();
+            workloadChartInstance = null;
+        }
+        
+        // Obtener estadisticas de horas por proyecto
+        const hoursResponse = await fetch(`${API_BASE_URL}/reports/stats/hours-by-project`);
+        if (!hoursResponse.ok) throw new Error('Error en hours-by-project');
+        const hoursStats = await hoursResponse.json();
+        
+        // Obtener distribucion de carga de trabajo
+        const workloadResponse = await fetch(`${API_BASE_URL}/reports/stats/workload-distribution`);
+        if (!workloadResponse.ok) throw new Error('Error en workload-distribution');
+        const workloadStats = await workloadResponse.json();
+        
+        // Mostrar graficos y estadisticas
+        displayHoursChart(hoursStats);
+        displayWorkloadChart(workloadStats);
+        displayEfficiencyStats(hoursStats);
+        displayWorkloadSummary(workloadStats);
+        displayGeneralMetrics(hoursStats, workloadStats);
     } catch (error) {
-        console.error('Error cargando estadisticas:', error);
-        showError('Error cargando estadisticas');
+        console.error('Error detallado:', error);
+        showError('Error cargando estadisticas: ' + error.message);
     }
 }
 
@@ -330,7 +352,7 @@ function displayHoursChart(stats) {
     const ctx = document.getElementById('hoursChart').getContext('2d');
     
     // Crea un nuevo grafico usando la libreria Chart.js
-    new Chart(ctx, {
+    hoursChartInstance = new Chart(ctx, {
         type: 'bar', // Tipo de grafico: barras verticales
         data: {
             // Etiquetas del eje X: nombres de los proyectos
@@ -355,26 +377,124 @@ function displayHoursChart(stats) {
     });
 }
 
-// Muestra las estadisticas de carga de trabajo en formato de lista
-function displayWorkloadStats(stats) {
-    // Obtiene el contenedor donde se mostraran las estadisticas
-    const container = document.getElementById('workloadStats');
-    // Calcula el total de horas sumando las horas de todos los proyectos
-    const totalHours = stats.reduce((sum, s) => sum + s.totalHours, 0);
+// Muestra grafico de carga de trabajo por trabajador
+function displayWorkloadChart(workload) {
+    const ctx = document.getElementById('workloadChart').getContext('2d');
     
-    // Crea una lista con cada proyecto y sus horas
-    container.innerHTML = stats.map(stat => `
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <span>${stat.projectName}</span>
-            <span class="badge bg-primary">${stat.totalHours}h</span>
+    workloadChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: workload.map(w => w.userName),
+            datasets: [{
+                label: 'Horas Totales',
+                data: workload.map(w => w.totalHours),
+                backgroundColor: 'rgba(201, 100, 123, 0.8)',
+                borderColor: 'rgba(201, 100, 123, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+// Muestra analisis de eficiencia por proyecto
+function displayEfficiencyStats(stats) {
+    const container = document.getElementById('efficiencyStats');
+    
+    if (stats.length === 0) {
+        container.innerHTML = '<p class="text-muted">No hay datos de proyectos</p>';
+        return;
+    }
+    
+    container.innerHTML = stats.map(stat => {
+        // Usar horas estimadas del proyecto o calcular segun presupuesto
+        const estimatedHours = stat.projectEstimatedHours > 0 ? stat.projectEstimatedHours : (stat.projectBudget / 1000) * 40;
+        const efficiency = estimatedHours > 0 ? (stat.totalHours / estimatedHours) * 100 : 0;
+        let badgeClass = 'bg-success';
+        let icon = 'check-circle';
+        
+        if (efficiency > 110) {
+            badgeClass = 'bg-danger';
+            icon = 'exclamation-triangle';
+        } else if (efficiency > 100) {
+            badgeClass = 'bg-warning';
+            icon = 'exclamation-circle';
+        }
+        
+        return `
+            <div class="d-flex justify-content-between align-items-center mb-3 p-2 border rounded">
+                <div>
+                    <strong>${stat.projectName}</strong><br>
+                    <small class="text-muted">${stat.totalHours}h / ${estimatedHours.toFixed(0)}h estimadas</small>
+                </div>
+                <span class="badge ${badgeClass}">
+                    <i class="bi bi-${icon}"></i> ${efficiency.toFixed(0)}%
+                </span>
+            </div>
+        `;
+    }).join('');
+}
+
+// Muestra resumen de carga de trabajo
+function displayWorkloadSummary(workload) {
+    const container = document.getElementById('workloadSummary');
+    
+    if (workload.length === 0) {
+        container.innerHTML = '<p class="text-muted">No hay datos de trabajadores</p>';
+        return;
+    }
+    
+    container.innerHTML = workload.map(worker => {
+        const isOverloaded = worker.avgHoursPerDay > 9;
+        const badgeClass = isOverloaded ? 'bg-danger' : 'bg-success';
+        
+        return `
+            <div class="d-flex justify-content-between align-items-center mb-2 p-2 border rounded ${isOverloaded ? 'border-danger' : ''}">
+                <div>
+                    <strong>${worker.userName}</strong><br>
+                    <small class="text-muted">${worker.projectCount} proyectos</small>
+                </div>
+                <div class="text-end">
+                    <span class="badge ${badgeClass}">${worker.totalHours}h</span><br>
+                    <small class="text-muted">${worker.avgHoursPerDay.toFixed(1)}h/dia</small>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Muestra metricas generales del sistema
+function displayGeneralMetrics(hoursStats, workloadStats) {
+    const container = document.getElementById('generalMetrics');
+    
+    const totalHours = hoursStats.reduce((sum, s) => sum + s.totalHours, 0);
+    const totalWorkers = workloadStats.length;
+    const avgHoursPerWorker = totalWorkers > 0 ? totalHours / totalWorkers : 0;
+    const totalProjects = hoursStats.length;
+    
+    container.innerHTML = `
+        <div class="mb-3">
+            <h3 class="h6 text-muted">Horas Totales Registradas</h3>
+            <p class="h4 mb-0">${totalHours.toFixed(0)}h</p>
         </div>
-    `).join('') + `
-        <hr>
-        <div class="d-flex justify-content-between align-items-center">
-            <strong>Total:</strong>
-            <strong>${totalHours}h</strong>
+        <div class="mb-3">
+            <h3 class="h6 text-muted">Promedio por Trabajador</h3>
+            <p class="h4 mb-0">${avgHoursPerWorker.toFixed(1)}h</p>
         </div>
-    `; // Agrega una linea separadora y el total general al final
+        <div class="mb-3">
+            <h3 class="h6 text-muted">Trabajadores Activos</h3>
+            <p class="h4 mb-0">${totalWorkers}</p>
+        </div>
+        <div>
+            <h3 class="h6 text-muted">Proyectos con Actividad</h3>
+            <p class="h4 mb-0">${totalProjects}</p>
+        </div>
+    `;
 }
 
 // Manejar envio de formulario de feriados

@@ -15,6 +15,11 @@ const projectSchema = new mongoose.Schema({
     required: [true, 'El presupuesto es requerido'],
     min: [0, 'El presupuesto debe ser mayor a 0']
   },
+  projectEstimatedHours: {
+    type: Number,
+    default: 0,
+    min: [0, 'Las horas estimadas deben ser mayor o igual a 0']
+  },
   projectStartDate: {
     type: Date,
     required: [true, 'La fecha de inicio es requerida']
