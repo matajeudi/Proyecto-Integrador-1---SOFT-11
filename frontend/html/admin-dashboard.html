@@ -46,16 +46,16 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="list-group">
-                    <button class="list-group-item list-group-item-action active" data-section="vacation-requests">
+                    <button class="list-group-item list-group-item-action active" data-section="vacation-requests" aria-label="Ir a solicitudes de vacaciones">
                         Solicitudes de Vacaciones
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="reports-stats">
+                    <button class="list-group-item list-group-item-action" data-section="reports-stats" aria-label="Ir a reportes y estadisticas">
                         Reportes y Estadísticas
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="holiday-management">
+                    <button class="list-group-item list-group-item-action" data-section="holiday-management" aria-label="Ir a gestion de feriados">
                         Gestión de Feriados
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="vacation-periods">
+                    <button class="list-group-item list-group-item-action" data-section="vacation-periods" aria-label="Ir a periodos de vacaciones">
                         Períodos de Vacaciones
                     </button>
                 </div>
@@ -94,7 +94,7 @@
                                     <h2 class="h5">Horas por Proyecto</h2>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="hoursChart"></canvas>
+                                    <canvas id="hoursChart" aria-label="Grafico de barras mostrando horas trabajadas por proyecto"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                                     <h2 class="h5">Carga por Trabajador</h2>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="workloadChart"></canvas>
+                                    <canvas id="workloadChart" aria-label="Grafico de barras mostrando carga de trabajo por trabajador"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -205,7 +205,7 @@
                                             <textarea class="form-control" id="periodDescription" rows="2"
                                                 placeholder="Descripción del período" maxlength="500"></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">
+                                        <button type="submit" class="btn btn-primary" aria-label="Agregar nuevo periodo de vacaciones">
                                             <i class="bi bi-plus-circle" aria-hidden="true"></i> Agregar Período
                                         </button>
                                     </form>
@@ -253,7 +253,7 @@
                                             </label>
                                             <input type="date" class="form-control" id="holidayDate" required>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">
+                                        <button type="submit" class="btn btn-primary" aria-label="Agregar nuevo feriado">
                                             <i class="bi bi-plus-circle" aria-hidden="true"></i> Agregar Feriado
                                         </button>
                                     </form>
@@ -301,9 +301,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" onclick="approveVacation()">Aprobar</button>
-                    <button type="button" class="btn btn-danger" onclick="rejectVacation()">Rechazar</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="approveVacation()" aria-label="Aprobar solicitud de vacaciones">Aprobar</button>
+                    <button type="button" class="btn btn-danger" onclick="rejectVacation()" aria-label="Rechazar solicitud de vacaciones">Rechazar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Cancelar y cerrar">Cancelar</button>
                 </div>
             </div>
         </div>
