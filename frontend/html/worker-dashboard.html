@@ -49,16 +49,16 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="list-group">
-                    <button class="list-group-item list-group-item-action active" data-section="daily-report">
+                    <button class="list-group-item list-group-item-action active" data-section="daily-report" aria-label="Ir a reporte diario">
                         Reporte Diario
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="vacation-request">
+                    <button class="list-group-item list-group-item-action" data-section="vacation-request" aria-label="Ir a solicitar vacaciones">
                         Solicitar Vacaciones
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="my-reports">
+                    <button class="list-group-item list-group-item-action" data-section="my-reports" aria-label="Ir a mis reportes">
                         Mis Reportes
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="my-vacations">
+                    <button class="list-group-item list-group-item-action" data-section="my-vacations" aria-label="Ir a mis vacaciones">
                         Mis Vacaciones
                     </button>
                 </div>
@@ -78,7 +78,7 @@
 
                         <div id="activitiesContainer">
                             <div class="activity-item border p-3 mb-3">
-                                <h5>Actividad 1</h5>
+                                <h2 class="h5">Actividad 1</h2>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="activityProject0" class="form-label text-dark fw-semibold">
@@ -120,12 +120,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <button type="button" class="btn btn-outline-primary" onclick="addActivity()">
+                            <button type="button" class="btn btn-outline-primary" onclick="addActivity()" aria-label="Agregar nueva actividad al reporte">
                                 Agregar Actividad
                             </button>
                         </div>
 
-                        <button type="submit" class="btn btn-success">Guardar Reporte</button>
+                        <button type="submit" class="btn btn-success" aria-label="Guardar reporte diario">Guardar Reporte</button>
                     </form>
                 </div>
 
@@ -178,7 +178,7 @@
                                                 placeholder="Describa el motivo de su solicitud de vacaciones"
                                                 minlength="10" maxlength="500" required></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+                                        <button type="submit" class="btn btn-primary" aria-label="Enviar solicitud de vacaciones">Enviar Solicitud</button>
                                     </form>
                                 </div>
                             </div>
