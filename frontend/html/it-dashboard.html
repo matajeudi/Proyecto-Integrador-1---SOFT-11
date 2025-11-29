@@ -48,13 +48,13 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="list-group">
-                    <button class="list-group-item list-group-item-action active" data-section="project-management">
+                    <button class="list-group-item list-group-item-action active" data-section="project-management" aria-label="Ir a gestion de proyectos">
                         Gestión de Proyectos
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="user-assignment">
+                    <button class="list-group-item list-group-item-action" data-section="user-assignment" aria-label="Ir a asignacion de usuarios">
                         Asignación de Usuarios
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="project-catalog">
+                    <button class="list-group-item list-group-item-action" data-section="project-catalog" aria-label="Ir a catalogo de proyectos">
                         Catálogo de Proyectos
                     </button>
                 </div>
@@ -65,7 +65,7 @@
                 <div id="project-management" class="content-section">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h1 class="h3">Gestión de Proyectos</h1>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projectModal">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projectModal" aria-label="Abrir formulario para crear nuevo proyecto">
                             Crear Nuevo Proyecto
                         </button>
                     </div>
@@ -101,7 +101,7 @@
                                     <h2 class="h5">Seleccionar Proyecto</h2>
                                 </div>
                                 <div class="card-body">
-                                    <select class="form-select" id="assignmentProject">
+                                    <select class="form-select" id="assignmentProject" aria-label="Seleccionar proyecto para asignar usuarios">
                                         <option value="">Seleccionar proyecto</option>
                                         <!-- Opciones cargadas dinamicamente -->
                                     </select>
@@ -233,8 +233,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="saveProject()">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Cancelar y cerrar">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProject()" aria-label="Guardar proyecto">Guardar</button>
                 </div>
             </div>
         </div>
