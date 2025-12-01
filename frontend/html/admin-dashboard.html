@@ -14,15 +14,19 @@
 </head>
 
 <body>
+
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="#"><i class="bi bi-building" aria-hidden="true"></i> Rikimaka</a>
 
+            <!-- btn hamburguesa en small views-->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+            <!-- Username en navbar -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><span class="navbar-text me-3"><i class="bi bi-person-circle p-1"
@@ -33,7 +37,8 @@
                     <li><button class="btn btn-light btn-sm m-1" id="themeToggle" aria-label="Cambiar tema">
                             <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
                         </button></li>
-                    
+
+                    <!-- Btn de cerrar sesion -->
                     <li><button class="btn btn-light btn-sm m-1" onclick="logout()">
                             <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i> Cerrar Sesión
                         </button></li>
@@ -42,29 +47,45 @@
         </div>
     </nav>
 
+    <!-- Menu de opciones admin -->
     <div class="container-fluid mt-4">
         <div class="row">
             <div class="col-md-3">
                 <div class="list-group">
-                    <button class="list-group-item list-group-item-action active" data-section="vacation-requests" aria-label="Ir a solicitudes de vacaciones">
+
+                    <!-- Solicitud de vacaciones -->
+                    <button class="list-group-item list-group-item-action active" data-section="vacation-requests"
+                        aria-label="Ir a solicitudes de vacaciones">
                         Solicitudes de Vacaciones
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="reports-stats" aria-label="Ir a reportes y estadisticas">
+
+                    <!-- Reportes y Estadisticas -->
+                    <button class="list-group-item list-group-item-action" data-section="reports-stats"
+                        aria-label="Ir a reportes y estadisticas">
                         Reportes y Estadísticas
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="holiday-management" aria-label="Ir a gestion de feriados">
+
+                    <!-- Gestion de feriados -->
+                    <button class="list-group-item list-group-item-action" data-section="holiday-management"
+                        aria-label="Ir a gestion de feriados">
                         Gestión de Feriados
                     </button>
-                    <button class="list-group-item list-group-item-action" data-section="vacation-periods" aria-label="Ir a periodos de vacaciones">
+
+                    <!-- Periodo de Vacaciones -->
+                    <button class="list-group-item list-group-item-action" data-section="vacation-periods"
+                        aria-label="Ir a periodos de vacaciones">
                         Períodos de Vacaciones
                     </button>
                 </div>
             </div>
 
+            <!-- Secciones -->
             <div class="col-md-9">
+
                 <!-- Seccion Solicitudes de Vacaciones -->
                 <div id="vacation-requests" class="content-section">
                     <div class="table-responsive">
+                        <!-- Tabla de solicitudes de vacaciones -->
                         <table class="table table-striped">
                             <caption class="h3 text-start fw-bold">Solicitudes de Vacaciones Pendientes</caption>
                             <thead>
@@ -88,27 +109,36 @@
                 <div id="reports-stats" class="content-section d-none">
                     <h1 class="h3">Reportes y Estadísticas</h1>
                     <div class="row mb-4">
+
+                        <!-- Grafico de horas por proyecto -->
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
                                     <h2 class="h5">Horas por Proyecto</h2>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="hoursChart" aria-label="Grafico de barras mostrando horas trabajadas por proyecto"></canvas>
+                                    <!-- uso de canvas para visualizar los graficos necesarios -->
+                                    <canvas id="hoursChart"
+                                        aria-label="Grafico de barras mostrando horas trabajadas por proyecto"></canvas>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Grafrico de carga por trabajador -->
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
                                     <h2 class="h5">Carga por Trabajador</h2>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="workloadChart" aria-label="Grafico de barras mostrando carga de trabajo por trabajador"></canvas>
+                                    <canvas id="workloadChart"
+                                        aria-label="Grafico de barras mostrando carga de trabajo por trabajador"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Grafico de efeciencia por proyecto -->
                     <div class="row mb-4">
                         <div class="col-md-12">
                             <div class="card">
@@ -123,6 +153,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- summary -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">
@@ -168,6 +200,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">
@@ -176,6 +209,7 @@
                                 </div>
                                 <div class="card-body">
                                     <form id="periodForm">
+                                        <!-- Nombre del periodo -->
                                         <div class="mb-3">
                                             <label for="periodName" class="form-label text-dark fw-semibold">
                                                 <i class="bi bi-calendar-range" aria-hidden="true"></i> Nombre del
@@ -185,18 +219,24 @@
                                                 placeholder="Ej: Vacaciones 2025" minlength="3" maxlength="100"
                                                 required>
                                         </div>
+
+                                        <!-- Fecha del periodo inicio -->
                                         <div class="mb-3">
                                             <label for="periodStartDate" class="form-label text-dark fw-semibold">
                                                 <i class="bi bi-calendar-check" aria-hidden="true"></i> Fecha Inicio
                                             </label>
                                             <input type="date" class="form-control" id="periodStartDate" required>
                                         </div>
+
+                                        <!-- Fecha del periodo fin -->
                                         <div class="mb-3">
                                             <label for="periodEndDate" class="form-label text-dark fw-semibold">
                                                 <i class="bi bi-calendar-x" aria-hidden="true"></i> Fecha Fin
                                             </label>
                                             <input type="date" class="form-control" id="periodEndDate" required>
                                         </div>
+
+                                        <!-- Descripcion del periodo -->
                                         <div class="mb-3">
                                             <label for="periodDescription" class="form-label text-dark fw-semibold">
                                                 <i class="bi bi-card-text" aria-hidden="true"></i> Descripción
@@ -205,13 +245,16 @@
                                             <textarea class="form-control" id="periodDescription" rows="2"
                                                 placeholder="Descripción del período" maxlength="500"></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-primary" aria-label="Agregar nuevo periodo de vacaciones">
+                                        <!--boton de submit el periodo-->
+                                        <button type="submit" class="btn btn-primary"
+                                            aria-label="Agregar nuevo periodo de vacaciones">
                                             <i class="bi bi-plus-circle" aria-hidden="true"></i> Agregar Período
                                         </button>
                                     </form>
                                 </div>
                             </div>
                         </div>
+                        <!--Panel de visualizacion de periodos activos-->
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
@@ -236,9 +279,12 @@
                                 <div class="card-header">
                                     <h2 class="h5">Agregar Feriado</h2>
                                 </div>
+
                                 <div class="card-body">
                                     <form id="holidayForm">
                                         <div class="mb-3">
+
+                                            <!-- nombre feriado -->
                                             <label for="holidayName" class="form-label text-dark fw-semibold">
                                                 <i class="bi bi-calendar-event" aria-hidden="true"></i> Nombre del
                                                 Feriado
@@ -247,19 +293,24 @@
                                                 placeholder="Ej: Día de la Independencia" minlength="3" maxlength="100"
                                                 required>
                                         </div>
+
+                                        <!-- fecha feriado -->
                                         <div class="mb-3">
                                             <label for="holidayDate" class="form-label text-dark fw-semibold">
                                                 <i class="bi bi-calendar3" aria-hidden="true"></i> Fecha
                                             </label>
                                             <input type="date" class="form-control" id="holidayDate" required>
                                         </div>
-                                        <button type="submit" class="btn btn-primary" aria-label="Agregar nuevo feriado">
+                                        <!-- agregar feriado-->
+                                        <button type="submit" class="btn btn-primary"
+                                            aria-label="Agregar nuevo feriado">
                                             <i class="bi bi-plus-circle" aria-hidden="true"></i> Agregar Feriado
                                         </button>
                                     </form>
                                 </div>
                             </div>
                         </div>
+                        <!-- vista de los feriados activos -->
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
@@ -278,17 +329,17 @@
         </div>
     </div>
 
-    <!-- Modal para aprobar/rechazar vacaciones -->
+    <!-- Modal para aprobar/rechazar vacaciones admin -->
     <div class="modal fade" id="vacationModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
+                <div class="modal-header">
                     <h2 class="modal-title h5 text-white fw-bold"><i class="bi bi-clipboard-check"
                             aria-hidden="true"></i> Procesar Solicitud</h2>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
                         aria-label="Cerrar"></button>
                 </div>
-                <div class="modal-body" style="background-color: #ffffff;">
+                <div class="modal-body">
                     <form id="vacationApprovalForm">
                         <input type="hidden" id="vacationId">
                         <div class="mb-3">
@@ -301,9 +352,12 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" onclick="approveVacation()" aria-label="Aprobar solicitud de vacaciones">Aprobar</button>
-                    <button type="button" class="btn btn-danger" onclick="rejectVacation()" aria-label="Rechazar solicitud de vacaciones">Rechazar</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Cancelar y cerrar">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="approveVacation()"
+                        aria-label="Aprobar solicitud de vacaciones">Aprobar</button>
+                    <button type="button" class="btn btn-danger" onclick="rejectVacation()"
+                        aria-label="Rechazar solicitud de vacaciones">Rechazar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        aria-label="Cancelar y cerrar">Cancelar</button>
                 </div>
             </div>
         </div>
